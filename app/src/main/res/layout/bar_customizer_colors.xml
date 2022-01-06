@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bright_grey"
+    android:paddingVertical="8dp"
+    app:layoutDescription="@xml/layout_advanced_tools_scene">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarColors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageViewBlack"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/brown" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/purple" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack4"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/pink" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack5"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/navy" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack6"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/blue" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack13"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/bright_teal" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack12"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/green" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack7"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/yellow" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack8"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/orange" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack9"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/red" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack10"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@android:color/darker_gray" />
+
+            <ImageView
+                android:id="@+id/imageViewBlack11"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/shape_of_color"
+                app:tint="@color/white" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+</RelativeLayout>

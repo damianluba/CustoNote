@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="add favourite.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.036302259"
+     inkscape:cx="-6487.1996"
+     inkscape:cy="-5853.6302"
+     inkscape:window-width="1600"
+     inkscape:window-height="837"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath1075">
+      <use
+         x="0"
+         y="0"
+         xlink:href="#g1071"
+         id="use1077" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g1073"
+       clip-path="url(#clipPath1075)"
+       inkscape:export-filename="C:\Users\admin\Desktop\Android\CustoNote\add favourite.png"
+       inkscape:export-xdpi="29.05687"
+       inkscape:export-ydpi="29.05687">
+      <g
+         inkscape:label="Clip"
+         id="g1071">
+        <g
+           id="g1057">
+          <path
+             sodipodi:type="star"
+             style="fill:#ffff00;fill-rule:evenodd;stroke:none;stroke-width:3.26929;stroke-linecap:round;stroke-linejoin:bevel;paint-order:markers fill stroke;stop-color:#000000"
+             id="path1054"
+             inkscape:flatsided="false"
+             sodipodi:sides="5"
+             sodipodi:cx="-495.83691"
+             sodipodi:cy="-101.5777"
+             sodipodi:r1="342.95541"
+             sodipodi:r2="163.72932"
+             sodipodi:arg1="0.64651315"
+             sodipodi:arg2="1.2748317"
+             inkscape:rounded="0"
+             inkscape:randomized="0"
+             d="M -222.09362,105.02101 -448.08318,55.032879 -607.73264,222.61015 -630.02571,-7.7658699 -838.73556,-107.8173 l 212.21168,-92.39208 30.65967,-229.41245 153.4471,173.27457 227.65857,-41.73326 -117.37615,199.481654 z"
+             transform="matrix(0.25009342,0.08635751,0.08635751,-0.25009342,219.07308,130.56624)"
+             inkscape:transform-center-x="-0.0036034964"
+             inkscape:transform-center-y="-8.6614884" />
+          <text
+             xml:space="preserve"
+             style="font-size:141.111px;line-height:1.25;font-family:Dubai;-inkscape-font-specification:Dubai;text-align:center;text-anchor:middle;fill:#66ff64;fill-opacity:1;stroke-width:0.264583"
+             x="146.6073"
+             y="63.499947"
+             id="text2708"><tspan
+               sodipodi:role="line"
+               id="tspan2706"
+               style="font-size:141.111px;fill:#66ff64;fill-opacity:1;stroke-width:0.264583"
+               x="146.6073"
+               y="63.499947">+</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
