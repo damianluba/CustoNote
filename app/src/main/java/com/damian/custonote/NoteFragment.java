@@ -5,26 +5,31 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.damian.custonote.data.database.DatabaseHelper;
 import com.damian.custonote.data.model.Note;
-import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class NoteFragment extends Fragment {
     private AppBarConfiguration appBarConfiguration;
@@ -44,13 +49,20 @@ public class NoteFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_note, container, false);
-        AppBarLayout appBarLayout = root.findViewById(R.id.appBarLayout);
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setTitle("New note");
+//        AppBarLayout appBarLayout = root.findViewById(R.id.appBarLayout);
+        Toolbar toolbar = root.findViewById(R.id.toolbar_note);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        toolbar.inflateMenu(R.menu.action_bar_note_fragment);
+        CollapsingToolbarLayout collapsingToolbarLayout = root.findViewById(R.id.collapsingToolbarLayout);
+        /*actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);*/
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 //        context= this.getContext();
         fabEditNote = root.findViewById(R.id.fabEditNote);
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_note);
@@ -79,11 +91,80 @@ public class NoteFragment extends Fragment {
 //            editTextContent_contentNote.setText(noteId.getString("noteContent"));
 
             note = new Note(receivedNoteId);
-            editTextTitle_contentNote.setText(note.getTitle());
+            editTextTitle_contentNote.setText(String.valueOf(note.getId()));
             editTextContent_contentNote.setText(note.getContent());
         } else { //there aren't delivered any information so the note is empty
             editTextContent_contentNote.requestFocus();
         }
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.action_bar_note_fragment, menu);
+        menuItemStar = menu.findItem(R.id.itemStar);
+        menuItemSave = menu.findItem(R.id.itemSave);
+        menuItemDelete = menu.findItem(R.id.itemDelete);
+        menuItemSwitchMode = menu.findItem(R.id.itemSwitchMode);
+
+        menuItemSave.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() { // SAVING A NOTE
+            @Override        //save a note
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                timestampNoteModified = LocalDateTime.now(); //it needs to be done objectively
+
+                if(timestampNoteCreated == null) {//if a note was already opened as a new note
+                    timestampNoteCreated = timestampNoteModified;
+                    textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
+
+                    Note note = new Note(editTextTitle_contentNote.getText().toString(),
+                            editTextContent_contentNote.getText().toString());
+                    databaseHelper = new DatabaseHelper(context);
+                    database = databaseHelper.getWritableDatabase();
+                    databaseHelper.addNote(note);
+                    Toast.makeText(context, "Note saved", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    databaseHelper.updateNote(note.getId(), editTextContent_contentNote.getText().toString(),
+                            editTextTitle_contentNote.getText().toString(), timestampNoteCreated);
+                    databaseHelper.getDatabaseName();
+                    textViewTimestamp.setText("Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) + "\nCreated: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
+                }
+                    return false;
+            }
+        });
+
+        menuItemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                databaseHelper.deleteNote(note);
+                return false;
+            }
+        });
+
+        menuItemStar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            return false;
+        }
+    });
+
+        menuItemSwitchMode.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            //             if(menuItemSwitchMode.getIconTintList().equals(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))))
+            Toolbar toolbarTextTools = (Toolbar) menu.findItem(R.id.toolbarTextTools);
+            if(note.getIsBasicMode().equals(true)) {
+                toolbarTextTools.setVisibility(View.GONE); //turn off advanced mode
+                menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
+            } else {
+                toolbarTextTools.setVisibility(View.VISIBLE); //turn on advanced mode
+                menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.blue))); //setting the color of the item
+            }
+            note.setIsBasicMode(!note.getIsBasicMode());  //set the opposite mode
+            return false;
+        }
+    });
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }
