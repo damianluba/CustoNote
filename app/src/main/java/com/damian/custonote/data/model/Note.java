@@ -9,6 +9,7 @@ public class Note implements Serializable {
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Boolean isBasicMode;
 
+
     public Note(int ID, String title, String content/*, LocalDateTime timestampNoteCreated*/, Boolean isBasicMode) {
         this.ID = ID;
         this.title = title;

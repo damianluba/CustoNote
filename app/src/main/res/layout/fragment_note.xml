@@ -8,7 +8,6 @@
 
     <!-- https://gist.github.com/groverankush/9d09fbba07879790d5395434fda1e2d4 -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:theme="@style/Theme.CustoNote.AppBarOverlay"

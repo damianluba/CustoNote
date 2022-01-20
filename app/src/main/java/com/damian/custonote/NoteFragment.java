@@ -1,38 +1,9 @@
 package com.damian.custonote;
 
-import android.content.Context;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.ui.AppBarConfiguration;
-
-import com.damian.custonote.data.database.DatabaseHelper;
-import com.damian.custonote.data.model.Note;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class NoteFragment extends Fragment {
-    private AppBarConfiguration appBarConfiguration;
+    /*private AppBarConfiguration appBarConfiguration;
 //    private ActivityNoteBinding binding;
     Note note;
     TextView textViewTimestamp;
@@ -54,8 +25,8 @@ public class NoteFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         toolbar.inflateMenu(R.menu.action_bar_note_fragment);
         CollapsingToolbarLayout collapsingToolbarLayout = root.findViewById(R.id.collapsingToolbarLayout);
-        /*actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);*/
+        *//*actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);*//*
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,5 +137,5 @@ public class NoteFragment extends Fragment {
     });
 
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 }

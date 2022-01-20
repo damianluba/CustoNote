@@ -1,9 +1,33 @@
 package com.damian.custonote;
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import com.damian.custonote.data.database.DatabaseHelper;
+import com.damian.custonote.data.model.Note;
+import com.damian.custonote.databinding.ActivityNoteBinding;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class NoteActivity extends AppCompatActivity {
-    /*private AppBarConfiguration appBarConfiguration;
+    private AppBarConfiguration appBarConfiguration;
     private ActivityNoteBinding binding;
     Note note;
     TextView textViewTimestamp;
@@ -29,8 +53,8 @@ public class NoteActivity extends AppCompatActivity {
         context= this;
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_note);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        /*appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);*/
 
         binding.fabEditNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,10 +67,14 @@ public class NoteActivity extends AppCompatActivity {
         editTextContent_contentNote = findViewById(R.id.editTextContent_contentNote);
         textViewTimestamp = findViewById(R.id.textViewTimestamp);
 
+        //RECEIVING DATA FROM PREVIOUS ACTIVITY
         intent = getIntent();
         if(intent.getExtras() != null) { //if there are delivered some data from previous activity
-            //it means that the note already exists and is opened in view mode
-            note = (Note) intent.getSerializableExtra("data");
+            //it means that THE NOTE ALREADY EXISTS and is opened in view mode
+            int receivedNoteId = intent.getIntExtra("bundleNoteId", 0); //0 is a default value but mustn't be used
+            databaseHelper = new DatabaseHelper(context);
+            note = databaseHelper.getNoteByID(receivedNoteId);
+
             editTextTitle_contentNote.setText(note.getTitle());
             editTextContent_contentNote.setText(note.getContent());
         } else { //there aren't delivered any information so the note can be created by a user
@@ -56,7 +84,7 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.action_bar_note_activity, menu);
+        getMenuInflater().inflate(R.menu.action_bar_note_fragment, menu);
         menuItemStar = menu.findItem(R.id.itemStar);
         menuItemSave = menu.findItem(R.id.itemSave);
         menuItemDelete = menu.findItem(R.id.itemDelete);
@@ -71,26 +99,26 @@ public class NoteActivity extends AppCompatActivity {
                     timestampNoteCreated = timestampNoteModified;
                     textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
 
-                    Note note = new Note(editTextTitle_contentNote.getText().toString(), editTextContent_contentNote.getText().toString()*//*,timestampNoteCreated*//**//*); //TODO
+                    Note note = new Note(editTextTitle_contentNote.getText().toString(), editTextContent_contentNote.getText().toString()/*,timestampNoteCreated*/); //TODO
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
                     databaseHelper.addNote(note);
                     Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
                 } else {
-                    databaseHelper.updateNote(note.getID(), editTextContent_contentNote.getText().toString(), editTextTitle_contentNote.getText().toString(), timestampNoteCreated);
+                    databaseHelper.updateNote(note.getId(), editTextContent_contentNote.getText().toString(), editTextTitle_contentNote.getText().toString(), timestampNoteCreated);
                     databaseHelper.getDatabaseName();
                     textViewTimestamp.setText(
                             "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
                             "\nCreated: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
                 }
 //                File fileDir = context.getFilesDir();
-               *//**//* try {
+               /*try {
                     //SharedPreferences TODO
                     FileWriter fileWriter = new FileWriter(fileDir.getAbsolutePath() + "/" + note.getTitle() + ".txt");
                 }
                 catch(Exception e) {
                     Toast.makeText(context, "There occurred some problem during saving a note", Toast.LENGTH_LONG).show();
-                }*//*
+                }*/
                 return false;
             }
         });
@@ -142,5 +170,5 @@ public class NoteActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() { //called when user press back arrow to go up in the view hierarchy
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_note);
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
-    }*/
+    }
 }

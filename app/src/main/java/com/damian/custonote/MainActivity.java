@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,31 +26,39 @@ import com.damian.custonote.ui.all.AllFragment;
 import com.damian.custonote.ui.favourites.FavouritesFragment;
 import com.damian.custonote.ui.labels.LabelsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
+    Toolbar toolbarMain;
     TextView textViewUsername, textViewEmail;
     Button buttonLogIn;
     MenuItem menuItemImageUser, menuItemSearch;
     InputMethodManager imm;
     Dialog dialogBasicInfoAboutUser;
+    FloatingActionButton fabAdd;
     Context context;
+    BottomNavigationView bottomNavView;
+    NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.Theme_CustoNote); //the starting theme is @param splashScreenTheme, but after finished loading it's changed to Theme_CustoNote
+        setTheme(R.style.Theme_CustoNote); //the starting theme is @param splashScreenTheme, but after finished
+        // loading it's changed to Theme_CustoNote
         setContentView(R.layout.activity_main);
         context = this;
-        BottomNavigationView bottomNavView = findViewById(R.id.bottom_nav_view);
-        bottomNavView.setOnNavigationItemSelectedListener(navigationBarListener);
+        bottomNavView = findViewById(R.id.bottom_nav_view);
+        bottomNavView.setOnNavigationItemSelectedListener(bottomNavigationViewItemListener);
+        fabAdd = findViewById(R.id.fabAdd);
+        toolbarMain = findViewById(R.id.toolbar);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_all, R.id.navigation_favourites, R.id.navigation_labels).build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_all,
+                R.id.navigation_favourites, R.id.navigation_labels).build();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNavView, navController); //fragments switch's support
         NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
-
         navController.setGraph(navGraph);
     }
 
@@ -77,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
         return true /*super.onCreateOptionsMenu(menu)*/;
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navigationBarListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private BottomNavigationView.OnNavigationItemSelectedListener bottomNavigationViewItemListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
@@ -94,10 +104,21 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new LabelsFragment();
                     break;
             }
+
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
             return true;
         }
     };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     public boolean onSearchRequested() {
@@ -105,9 +126,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-//            doMySearch(query);
+            //            doMySearch(query);
         }
     }
 
@@ -123,12 +144,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void showSystemKeyboard(Context context) {
         imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-//        imm.showSoftInput(textInputEditTextSearch, InputMethodManager.SHOW_IMPLICIT);
+        //        imm.showSoftInput(textInputEditTextSearch, InputMethodManager.SHOW_IMPLICIT);
         //        recyclerView.setAlpha(0.2f); //set the recycler view transparency to focus on search
     }
+
     public void hideSystemKeyboard(Context context) {
         imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(textInputEditTextSearch.getWindowToken(), 0);
+        //        imm.hideSoftInputFromWindow(textInputEditTextSearch.getWindowToken(), 0);
         //        recyclerView.setAlpha(1); //set the recycler view transparency to focus on search
     }
 }
