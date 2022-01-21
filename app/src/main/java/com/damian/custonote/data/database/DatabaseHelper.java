@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.damian.custonote.data.model.Note;
@@ -22,6 +23,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_CONTENT = "CONTENT";
     public static final String COL_TIMESTAMP = "TIMESTAMP";
     public static final String COL_IS_BASIC_MODE = "IS_BASIC_MODE";
+    public static final String COL_IS_FAVOURITE = "IS_FAVOURITE";
+    public static final String COL_IS_SYNCHRONISED = "IS_SYNCHRONISED";
     public static final String FORMAT_DATE_TIME = "d MMM YYYY, HH:mm";
 
     //methods for notes managing
@@ -31,9 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_TITLE + " TEXT," + COL_CONTENT + " TEXT," + COL_IS_BASIC_MODE + " TEXT" +/*
-                COL_TIMESTAMP + " TEXT" +*/
-                ")");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_TITLE + " TEXT," + COL_CONTENT + " TEXT," + COL_IS_BASIC_MODE + " TEXT" +/*COL_TIMESTAMP + " TEXT" +*/")");
 
         //        addNote(new Note("Title", "Content"));
         //        addNote(new Note("Title", "Content"));
@@ -51,29 +52,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //        contentValues.put(COL_ID, note.getID());
         contentValues.put(COL_TITLE, note.getTitle());
         contentValues.put(COL_CONTENT, note.getContent());
-        contentValues.put(COL_CONTENT, note.getContent());
-        contentValues.put(COL_IS_BASIC_MODE, true); //a note is always created in a basic mode
-        //        contentValues.put(COL_TIMESTAMP, note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern
-        //        (FORMAT_DATE_TIME)));
+        note.setIsBasicMode(false);
+        contentValues.put(COL_IS_BASIC_MODE, (note.getIsBasicMode()?1:0));
+
+        //        contentValues.put(COL_TIMESTAMP, note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(FORMAT_DATE_TIME)));
         database.insert(DATABASE_TABLE, null, contentValues);
+        database.close();
     }
 
     public void updateNote(int ID, String newContent, String newTitle, LocalDateTime newTimestamp) {
         SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues updatedValues = new ContentValues();
-        updatedValues.put(COL_TITLE, newTitle);
-        updatedValues.put(COL_CONTENT, newContent);
+       // ContentValues updatedValues = new ContentValues();
+        //.put(COL_TITLE, newTitle);
+        //updatedValues.put(COL_CONTENT, newContent);
         //        updatedValues.put(COL_TIMESTAMP, newTimestamp.format(DateTimeFormatter.ofPattern(FORMAT_DATE_TIME)));
         //        database.update(DATABASE_TABLE, updatedValues, "ID = ?", new String[]{Integer.toString(ID)});
-        database.update(DATABASE_TABLE, updatedValues, COL_ID + " " + ID, null);
-        database.close();
+        //database.update(DATABASE_TABLE, updatedValues, COL_ID + " " + ID, null);
+//        String sql = "UPDATE  " + DATABASE_TABLE + " SET  " + COL_TITLE  +
+//                " =  \'" + newTitle + "\', " + COL_CONTENT + " = \'" + newContent + "\' where  " + COL_ID + " = " + ID;
+//        database.execSQL(sql);
+//        database.close();
     }
 
-    public void deleteNote(Note note) {
+    public void deleteNote(@NonNull Note note) {
         SQLiteDatabase database = this.getWritableDatabase();  //this is just in case if there is no parameters in
         // this function
-        Cursor cursor = database.rawQuery("DELETE FROM " + DATABASE_TABLE + " where " + COL_ID + " = " + note.getId()
-                , null);
+        Cursor cursor = database.rawQuery("DELETE FROM " + DATABASE_TABLE + " where " + COL_ID + " = " + note.getId(), null);
     }
 
     public Cursor getData() {
@@ -107,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Boolean isBasicMode = Boolean.parseBoolean(record.getString(3));
         //        LocalDateTime timestamp = LocalDateTime.parse(record.getString(4), DateTimeFormatter.ofPattern(FORMAT_DATE_TIME));
         database.close();
-        return new Note(id, title, content, false/*, timestamp*/);
+        return new Note(id, title, content, isBasicMode/*, timestamp*/);
     }
 
     public List<Note> findNoteWithPhrase(String phrase) {
@@ -145,10 +149,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 note.setID(cursor.getInt(0));
                 note.setTitle(cursor.getString(1));
                 note.setContent(cursor.getString(2));
-                if(cursor.getString(3).equals(true))
-                    note.setIsBasicMode(true);
-                else
-                    note.setIsBasicMode(false);
+                note.setIsBasicMode(cursor.getInt(3)==1);
+
+
                 //                note.setTimestampNoteCreated(LocalDateTime.parse(cursor.getString(3)));
                 allNotes.add(note);
             } while(cursor.moveToNext());

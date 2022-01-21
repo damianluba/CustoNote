@@ -50,6 +50,7 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:scaleType="fitXY"
+        android:visibility="gone"
         app:backgroundTint="@color/app_accent"
         app:fabCustomSize="70dp"
         app:maxImageSize="@dimen/fab_dimen"

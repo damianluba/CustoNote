@@ -24,7 +24,7 @@
     <string name="title_activity_note">NoteActivity</string>
     <string name="title_activity_testuj">TestujActivity</string>
     <string name="title_activity_testowanie">TestowanieActivity</string>
-    <string name="sampleTextInNoteContent">Success is the ability to achieve personal, professional, and life goals. This is done through proper planning, hard work, and will. The successful person is the person who is capable of making the critical, bold decisions to reach his desired goals.</string>
+    <string name="sampleTextInNoteContent">Success is the ability to achieve personal, professional and life goals. This is done through proper planning, hard work and will. The successful person is the person who is capable of making the critical, bold decisions to reach his desired goals.</string>
     <string name="sampleTextInNoteTitle">How to be a successful person?</string>
     <string name="title_activity_search"></string>
     <string name="search_hint">Search notes with phrase</string>

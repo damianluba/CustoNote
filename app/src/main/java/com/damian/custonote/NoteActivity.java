@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter;
 public class NoteActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityNoteBinding binding;
-    Note note;
+    Note note = new Note();
     TextView textViewTimestamp;
     MenuItem menuItemSave, menuItemStar, menuItemDelete, menuItemSwitchMode;
     DatabaseHelper databaseHelper;
@@ -39,9 +39,11 @@ public class NoteActivity extends AppCompatActivity {
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Context context;
     Intent intent;
+    int receivedNoteId;
+    String receivedTitle;
+    String receivedContent;
+    boolean receivedIsBasicMode;
 
-
-    //transform content_note to NestedScrollView, this will give original look of note by bigger field from top
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +52,7 @@ public class NoteActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setTitle("New note");
+        //        getSupportActionBar().setTitle("New note");
 
         context= this;
 
@@ -74,11 +76,11 @@ public class NoteActivity extends AppCompatActivity {
         intent = getIntent();
         if(intent.getExtras() != null) { //if there are delivered some data from previous activity
             //it means that THE NOTE ALREADY EXISTS and is opened in view mode
-            int receivedNoteId = intent.getIntExtra("bundleId", 0); //0 is a default value but mustn't be used
-            String receivedTitle = intent.getStringExtra("bundleTitle"); //0 is a default value but mustn't be used
-            String receivedContent = intent.getStringExtra("bundleContent"); //0 is a default value but mustn't be used
-            boolean receivedIsBasicMode = intent.getBooleanExtra("bundleIsBasicMode", false); //0 is a default value but mustn't be used
-
+            receivedNoteId = intent.getIntExtra("bundleId", 0);
+            receivedTitle = intent.getStringExtra("bundleTitle");
+            receivedContent = intent.getStringExtra("bundleContent");
+            receivedIsBasicMode = intent.getBooleanExtra("bundleIsBasicMode", true);
+            note.setID(receivedNoteId);
             editTextTitle_contentNote.setText(receivedTitle);
             if(receivedIsBasicMode) {//if user left the note keeping it in a basic mode
                 editTextContent_contentNote.setText(receivedContent);
@@ -88,46 +90,47 @@ public class NoteActivity extends AppCompatActivity {
             }
         } else { //there aren't delivered any information so the note can be created by a user
             editTextContent_contentNote.requestFocus();
+            receivedIsBasicMode = true;
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.action_bar_note_fragment, menu);
-        menuItemStar = menu.findItem(R.id.itemStar);
+        getMenuInflater().inflate(R.menu.action_bar_note_activity, menu);
         menuItemSave = menu.findItem(R.id.itemSave);
         menuItemDelete = menu.findItem(R.id.itemDelete);
+        menuItemStar = menu.findItem(R.id.itemStar);
         menuItemSwitchMode = menu.findItem(R.id.itemSwitchMode);
 
         menuItemSave.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() { // SAVING A NOTE
             @Override        //save a note
             public boolean onMenuItemClick(MenuItem menuItem) {
                 timestampNoteModified = LocalDateTime.now(); //it needs to be done objectively
-
+                System.err.println("\n\n\n\n\n\n\n A TU WEJDZIE CZY NIE WJEDZIE ");
+                System.err.println("wartosc ifa mi podaj prosze: " + timestampNoteCreated == null);
+                System.err.println(timestampNoteCreated);
+                System.err.println("koniec debugowania");
                 if(timestampNoteCreated == null) {//if a note was already opened as a new note
+                    System.out.println("tworzy nowa notatke");
                     timestampNoteCreated = timestampNoteModified;
                     textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
 
                     Note note = new Note(editTextTitle_contentNote.getText().toString(), editTextContent_contentNote.getText().toString()/*,timestampNoteCreated*/); //TODO
+
+                    // TODO here you must transform all temporary note changes to data in the note structure
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
                     databaseHelper.addNote(note);
                     Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
                 } else {
+                    System.out.println("zapisuje edytowana");
                     databaseHelper.updateNote(note.getId(), editTextContent_contentNote.getText().toString(), editTextTitle_contentNote.getText().toString(), timestampNoteCreated);
                     databaseHelper.getDatabaseName();
                     textViewTimestamp.setText(
                             "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
-                            "\nCreated: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
+                                    "\nCreated: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
                 }
-//                File fileDir = context.getFilesDir();
-               /*try {
-                    //SharedPreferences TODO
-                    FileWriter fileWriter = new FileWriter(fileDir.getAbsolutePath() + "/" + note.getTitle() + ".txt");
-                }
-                catch(Exception e) {
-                    Toast.makeText(context, "There occurred some problem during saving a note", Toast.LENGTH_LONG).show();
-                }*/
+
                 return false;
             }
         });
@@ -143,6 +146,12 @@ public class NoteActivity extends AppCompatActivity {
         menuItemStar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                //TODO
+                /*if(receivedIsFavourite) {
+                    menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.yellow))); //setting the color of the item
+                } else {
+                    menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
+                }*/
                 return false;
             }
         });
@@ -152,14 +161,15 @@ public class NoteActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 //             if(menuItemSwitchMode.getIconTintList().equals(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))))
                 Toolbar toolbarTextTools = findViewById(R.id.toolbarTextTools);
-                if(note.getIsBasicMode().equals(true)) {
-                    toolbarTextTools.setVisibility(View.GONE); //turn off advanced mode
+                if(receivedIsBasicMode) {
+                    hideAdvancedToolbar();
                     menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
                 } else {
-                    toolbarTextTools.setVisibility(View.VISIBLE); //turn on advanced mode
+                    initialiseAdvancedToolbar();
                     menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.blue))); //setting the color of the item
                 }
-                note.setIsBasicMode(!note.getIsBasicMode());  //set the opposite mode
+                //                note.setIsBasicMode(!note.getIsBasicMode());  //set the opposite mode
+                receivedIsBasicMode = !receivedIsBasicMode;
                 return false;
             }
         });
@@ -176,7 +186,7 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        this.finish();
+        //        this.finish();
         super.onBackPressed();
     }
 

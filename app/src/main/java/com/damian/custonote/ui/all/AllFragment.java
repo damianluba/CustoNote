@@ -66,14 +66,14 @@ public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
     @Override
     public void selectedNote(Note note) {   //passing the note data to another activity
         Bundle bundleNoteData = new Bundle();
-        bundleNoteData.putInt("bundleId", note.getId()); //it's enough to pass ID of the note, the NoteFragment gets all note data by its ID
-        bundleNoteData.putString("bundleTitle", note.getTitle()); //it's enough to pass ID of the note, the NoteFragment gets all note data by its ID
-        bundleNoteData.putString("bundleContent", note.getContent()); //it's enough to pass ID of the note, the NoteFragment gets all note data by its ID
-        bundleNoteData.putBoolean("bundleIsBasicMode", note.getIsBasicMode()); //it's enough to pass ID of the note, the NoteFragment gets all note data by its ID
-//        Navigation.findNavController(getView()).navigate(R.id.action_navigation_all_to_navigation_note, bundleNoteData);
+        bundleNoteData.putInt("bundleId", note.getId()); 
+        bundleNoteData.putString("bundleTitle", note.getTitle()); 
+        bundleNoteData.putString("bundleContent", note.getContent()); 
+        bundleNoteData.putBoolean("bundleIsBasicMode", note.getIsBasicMode());
+//        bundleNoteData.putBoolean("bundleIsFavourite", note.getIsFavourite());
         Intent intent = new Intent(getActivity(), NoteActivity.class);
         intent.putExtras(bundleNoteData);
-
+        System.out.println("SELECT ITEM ?!?!?!");
         startActivity(intent);
     }
 

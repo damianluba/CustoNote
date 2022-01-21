@@ -60,12 +60,13 @@
         android:background="#FFEAB5"
         android:backgroundTint="#FFCCCC"
         android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp"
+        android:paddingVertical="5dp"
         android:singleLine="false"
-        app:layout_constraintBottom_toTopOf="@id/toolbarAlignText"
+        app:layout_constraintBottom_toBottomOf="@+id/nav_host_fragment_content_note"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Created: 14 Dec 18:16" />
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarAlignText"
@@ -120,7 +121,7 @@
         android:id="@+id/toolbarTextTools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textViewTimestamp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 

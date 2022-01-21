@@ -33,8 +33,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         this.listNotes = listNotes;
     }
 
-    @NonNull
-    @Override
+    @NonNull @Override
     public NotesPositionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.layout_single_note_in_browsing, parent, false);
