@@ -81,14 +81,19 @@ public class NoteActivity extends AppCompatActivity {
             receivedContent = intent.getStringExtra("bundleContent");
             receivedIsBasicMode = intent.getBooleanExtra("bundleIsBasicMode", true);
             note.setID(receivedNoteId);
-            editTextTitle_contentNote.setText(receivedTitle);
+            note.setTitle(receivedTitle);
+            note.setContent(receivedContent);
+
+            editTextTitle_contentNote.setText(note.getTitle());
+            editTextContent_contentNote.setText(note.getContent());
             if(receivedIsBasicMode) {//if user left the note keeping it in a basic mode
                 editTextContent_contentNote.setText(receivedContent);
             }
             else {//show advanced editor for note editing
                 initialiseAdvancedToolbar();
             }
-        } else { //there aren't delivered any information so the note can be created by a user
+        } else { //THE NOTE IS BEING MODIFIED THE 1ST TIME;
+            // there aren't delivered any information so the note can be created by a user
             editTextContent_contentNote.requestFocus();
             receivedIsBasicMode = true;
         }
@@ -106,12 +111,8 @@ public class NoteActivity extends AppCompatActivity {
             @Override        //save a note
             public boolean onMenuItemClick(MenuItem menuItem) {
                 timestampNoteModified = LocalDateTime.now(); //it needs to be done objectively
-                System.err.println("\n\n\n\n\n\n\n A TU WEJDZIE CZY NIE WJEDZIE ");
-                System.err.println("wartosc ifa mi podaj prosze: " + timestampNoteCreated == null);
-                System.err.println(timestampNoteCreated);
-                System.err.println("koniec debugowania");
-                if(timestampNoteCreated == null) {//if a note was already opened as a new note
-                    System.out.println("tworzy nowa notatke");
+                if(note.getId() == 0) {//if a note was already opened as a new note
+
                     timestampNoteCreated = timestampNoteModified;
                     textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
 
@@ -121,15 +122,19 @@ public class NoteActivity extends AppCompatActivity {
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
                     databaseHelper.addNote(note);
-                    Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
+
                 } else {
-                    System.out.println("zapisuje edytowana");
-                    databaseHelper.updateNote(note.getId(), editTextContent_contentNote.getText().toString(), editTextTitle_contentNote.getText().toString(), timestampNoteCreated);
-                    databaseHelper.getDatabaseName();
-                    textViewTimestamp.setText(
-                            "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
-                                    "\nCreated: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
+                    databaseHelper = new DatabaseHelper(context);
+                    database = databaseHelper.getWritableDatabase();
+                    databaseHelper.updateNote(note.getId(),editTextContent_contentNote.getText().toString(),
+                            editTextTitle_contentNote.getText().toString());
+
+                    //databaseHelper.getDatabaseName();
+                   // textViewTimestamp.setText(
+                   //         "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
+                    //                "\nCreated: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
                 }
+                Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
 
                 return false;
             }

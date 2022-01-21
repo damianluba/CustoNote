@@ -73,7 +73,6 @@ public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
 //        bundleNoteData.putBoolean("bundleIsFavourite", note.getIsFavourite());
         Intent intent = new Intent(getActivity(), NoteActivity.class);
         intent.putExtras(bundleNoteData);
-        System.out.println("SELECT ITEM ?!?!?!");
         startActivity(intent);
     }
 

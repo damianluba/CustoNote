@@ -21,7 +21,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_ID = "ID";
     public static final String COL_TITLE = "TITLE";
     public static final String COL_CONTENT = "CONTENT";
-    public static final String COL_TIMESTAMP = "TIMESTAMP";
+    public static final String COL_TIMESTAMP_CREATED = "TIMESTAMP_CREATED";
+    public static final String COL_TIMESTAMP_MODIFIED = "TIMESTAMP_MODIFIED";
     public static final String COL_IS_BASIC_MODE = "IS_BASIC_MODE";
     public static final String COL_IS_FAVOURITE = "IS_FAVOURITE";
     public static final String COL_IS_SYNCHRONISED = "IS_SYNCHRONISED";
@@ -34,7 +35,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_TITLE + " TEXT," + COL_CONTENT + " TEXT," + COL_IS_BASIC_MODE + " TEXT" +/*COL_TIMESTAMP + " TEXT" +*/")");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "" +
+                "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_TITLE + " TEXT," + COL_CONTENT + " TEXT," + COL_IS_BASIC_MODE + " TEXT," + COL_TIMESTAMP_CREATED + " TEXT," + COL_TIMESTAMP_MODIFIED + " TEXT" +")");
 
         //        addNote(new Note("Title", "Content"));
         //        addNote(new Note("Title", "Content"));
@@ -49,29 +51,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void addNote(Note note) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        //        contentValues.put(COL_ID, note.getID());
         contentValues.put(COL_TITLE, note.getTitle());
         contentValues.put(COL_CONTENT, note.getContent());
-        note.setIsBasicMode(false);
+        contentValues.put(COL_TIMESTAMP_CREATED,  LocalDateTime.now().toString());
+        note.setIsBasicMode(false);//TODO
         contentValues.put(COL_IS_BASIC_MODE, (note.getIsBasicMode()?1:0));
-
-        //        contentValues.put(COL_TIMESTAMP, note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(FORMAT_DATE_TIME)));
         database.insert(DATABASE_TABLE, null, contentValues);
         database.close();
     }
 
-    public void updateNote(int ID, String newContent, String newTitle, LocalDateTime newTimestamp) {
+    public void updateNote(int ID, String newContent, String newTitle) {
         SQLiteDatabase database = this.getWritableDatabase();
-       // ContentValues updatedValues = new ContentValues();
-        //.put(COL_TITLE, newTitle);
-        //updatedValues.put(COL_CONTENT, newContent);
-        //        updatedValues.put(COL_TIMESTAMP, newTimestamp.format(DateTimeFormatter.ofPattern(FORMAT_DATE_TIME)));
-        //        database.update(DATABASE_TABLE, updatedValues, "ID = ?", new String[]{Integer.toString(ID)});
-        //database.update(DATABASE_TABLE, updatedValues, COL_ID + " " + ID, null);
-//        String sql = "UPDATE  " + DATABASE_TABLE + " SET  " + COL_TITLE  +
-//                " =  \'" + newTitle + "\', " + COL_CONTENT + " = \'" + newContent + "\' where  " + COL_ID + " = " + ID;
-//        database.execSQL(sql);
-//        database.close();
+       ContentValues updatedValues = new ContentValues();
+        updatedValues.put(COL_TITLE, newTitle);
+        updatedValues.put(COL_CONTENT, newContent);
+        updatedValues.put(COL_TIMESTAMP_MODIFIED,  LocalDateTime.now().toString());
+        database.update(DATABASE_TABLE, updatedValues,  COL_ID + " = " + ID, null);
+        database.close();
     }
 
     public void deleteNote(@NonNull Note note) {
@@ -89,7 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor allNotes() {
         SQLiteDatabase database = this.getWritableDatabase();
         return database.query(DATABASE_TABLE, new String[]{COL_ID, COL_TITLE, COL_CONTENT/*, COL_TIMESTAMP*/}, null,
-                null, null, null, COL_TIMESTAMP);
+                null, null, null, COL_TIMESTAMP_MODIFIED);
     }
 
     public Note getNoteByID(int id) { //Cursor getNoteById
@@ -150,8 +146,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 note.setTitle(cursor.getString(1));
                 note.setContent(cursor.getString(2));
                 note.setIsBasicMode(cursor.getInt(3)==1);
-
-
+                if(cursor.getString(4) != null) {
+                    note.setTimestampNoteCreated(LocalDateTime.parse(cursor.getString(4)));
+                }
+                if(cursor.getString(5) != null) {
+                    note.setTimestampNoteModified(LocalDateTime.parse(cursor.getString(5)));
+                }
                 //                note.setTimestampNoteCreated(LocalDateTime.parse(cursor.getString(3)));
                 allNotes.add(note);
             } while(cursor.moveToNext());
