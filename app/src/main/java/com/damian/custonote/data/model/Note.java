@@ -7,7 +7,7 @@ public class Note implements Serializable {
     int ID, Photo;
     String title, content;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
-    Boolean isBasicMode;
+    Boolean isBasicMode, isSynchronised;
 
 
     public Note(int ID, String title, String content/*, LocalDateTime timestampNoteCreated*/, Boolean isBasicMode) {

@@ -35,9 +35,11 @@ public class NoteActivity extends AppCompatActivity {
     DatabaseHelper databaseHelper;
     SQLiteDatabase database;
     EditText editTextTitle_contentNote,  editTextContent_contentNote;
+    Toolbar toolbarAlignText;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Context context;
     Intent intent;
+
 
     //transform content_note to NestedScrollView, this will give original look of note by bigger field from top
     @Override
@@ -66,17 +68,24 @@ public class NoteActivity extends AppCompatActivity {
         editTextTitle_contentNote = findViewById(R.id.editTextTitle_contentNote);
         editTextContent_contentNote = findViewById(R.id.editTextContent_contentNote);
         textViewTimestamp = findViewById(R.id.textViewTimestamp);
+        toolbarAlignText = findViewById(R.id.toolbarAlignText);
 
         //RECEIVING DATA FROM PREVIOUS ACTIVITY
         intent = getIntent();
         if(intent.getExtras() != null) { //if there are delivered some data from previous activity
             //it means that THE NOTE ALREADY EXISTS and is opened in view mode
-            int receivedNoteId = intent.getIntExtra("bundleNoteId", 0); //0 is a default value but mustn't be used
-            databaseHelper = new DatabaseHelper(context);
-            note = databaseHelper.getNoteByID(receivedNoteId);
+            int receivedNoteId = intent.getIntExtra("bundleId", 0); //0 is a default value but mustn't be used
+            String receivedTitle = intent.getStringExtra("bundleTitle"); //0 is a default value but mustn't be used
+            String receivedContent = intent.getStringExtra("bundleContent"); //0 is a default value but mustn't be used
+            boolean receivedIsBasicMode = intent.getBooleanExtra("bundleIsBasicMode", false); //0 is a default value but mustn't be used
 
-            editTextTitle_contentNote.setText(note.getTitle());
-            editTextContent_contentNote.setText(note.getContent());
+            editTextTitle_contentNote.setText(receivedTitle);
+            if(receivedIsBasicMode) {//if user left the note keeping it in a basic mode
+                editTextContent_contentNote.setText(receivedContent);
+            }
+            else {//show advanced editor for note editing
+                initialiseAdvancedToolbar();
+            }
         } else { //there aren't delivered any information so the note can be created by a user
             editTextContent_contentNote.requestFocus();
         }
@@ -157,7 +166,12 @@ public class NoteActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void initializeAdvancedToolBar(Note note) {
+    private void initialiseAdvancedToolbar() {
+        toolbarAlignText.setVisibility(View.VISIBLE);
+    }
+
+    private void hideAdvancedToolbar() {
+        toolbarAlignText.setVisibility(View.GONE);
     }
 
     @Override
