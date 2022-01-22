@@ -47,17 +47,16 @@ public class SearchableActivity extends AppCompatActivity implements NotesAdapte
         searchView = (SearchView) menuItemSearchView.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.onActionViewExpanded(); //searchView is expanded and shows software keyboard automatically when this activity is opened
-//        searchView.setSubmitButtonEnabled(true); //additional button for submitting
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                          return true;
+                return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
+            public boolean onQueryTextChange(String phrase) {
                 DatabaseHelper databaseHelper = new DatabaseHelper(getBaseContext());
-                List<Note> listFoundNotes = databaseHelper.findNoteWithPhrase(s);
+                List<Note> listFoundNotes = databaseHelper.findNoteWithPhrase(phrase);
                 NotesAdapter notesAdapter = new NotesAdapter(getBaseContext(), listFoundNotes, SearchableActivity.this::selectedNote);
                 recyclerViewSearchedNotes.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -65,21 +64,22 @@ public class SearchableActivity extends AppCompatActivity implements NotesAdapte
                         startActivity(new Intent(getBaseContext(), NoteActivity.class));
                     }
                 });
-                if(listFoundNotes != null)
-                    recyclerViewSearchedNotes.setAdapter(notesAdapter);
-                else Toast.makeText(getApplicationContext(), "No notes with this phrase", Toast.LENGTH_LONG).show();
-
+                if(!phrase.isEmpty()) {
+                    if(listFoundNotes != null) {
+                        recyclerViewSearchedNotes.setVisibility(View.VISIBLE);
+                        recyclerViewSearchedNotes.setAdapter(notesAdapter);
+                    }
+                    else { //there's no notes with the typed phrase
+                        recyclerViewSearchedNotes.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "No notes with this phrase", Toast.LENGTH_LONG).show();
+                    }
+                } else recyclerViewSearchedNotes.setVisibility(View.GONE);
                 return false;
             }
         });
 
         return super.onCreateOptionsMenu(menu);
     }
-
-/*    @Override
-    protected void onNewIntent(Intent intent) {
-             handleIntent(intent);
-    }*/
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {

@@ -40,8 +40,7 @@ public class NoteActivity extends AppCompatActivity {
     Context context;
     Intent intent;
     int receivedNoteId;
-    String receivedTitle;
-    String receivedContent;
+    String receivedTitle, receivedContent, receivedTimestampCreated, receivedTimestampModified;
     boolean receivedIsBasicMode;
 
     @Override
@@ -80,19 +79,23 @@ public class NoteActivity extends AppCompatActivity {
             receivedTitle = intent.getStringExtra("bundleTitle");
             receivedContent = intent.getStringExtra("bundleContent");
             receivedIsBasicMode = intent.getBooleanExtra("bundleIsBasicMode", true);
+
             note.setID(receivedNoteId);
             note.setTitle(receivedTitle);
             note.setContent(receivedContent);
-
+//            note.setTimestampNoteCreated(LocalDateTime.parse(receivedTimestampCreated));
             editTextTitle_contentNote.setText(note.getTitle());
             editTextContent_contentNote.setText(note.getContent());
+            textViewTimestamp.setText("Created: " + intent.getStringExtra("bundleTimestampNoteCreated")+
+                                                        "\nModified: " + intent.getStringExtra("bundleTimestampNoteModified"));
+
+
             if(receivedIsBasicMode) {//if user left the note keeping it in a basic mode
                 editTextContent_contentNote.setText(receivedContent);
-            }
-            else {//show advanced editor for note editing
+            } else {//show advanced editor for note editing
                 initialiseAdvancedToolbar();
             }
-        } else { //THE NOTE IS BEING MODIFIED THE 1ST TIME;
+        } else { //THE NOTE WASN'T MODIFIED BEFORE
             // there aren't delivered any information so the note can be created by a user
             editTextContent_contentNote.requestFocus();
             receivedIsBasicMode = true;
@@ -111,31 +114,27 @@ public class NoteActivity extends AppCompatActivity {
             @Override        //save a note
             public boolean onMenuItemClick(MenuItem menuItem) {
                 timestampNoteModified = LocalDateTime.now(); //it needs to be done objectively
+                timestampNoteCreated = timestampNoteModified;
                 if(note.getId() == 0) {//if a note was already opened as a new note
-
-                    timestampNoteCreated = timestampNoteModified;
                     textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
 
                     Note note = new Note(editTextTitle_contentNote.getText().toString(), editTextContent_contentNote.getText().toString()/*,timestampNoteCreated*/); //TODO
-
                     // TODO here you must transform all temporary note changes to data in the note structure
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
                     databaseHelper.addNote(note);
 
-                } else {
+                } else { //if not modified the first time
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
-                    databaseHelper.updateNote(note.getId(),editTextContent_contentNote.getText().toString(),
-                            editTextTitle_contentNote.getText().toString());
+                    databaseHelper.updateNote(note.getId(), editTextContent_contentNote.getText().toString(), editTextTitle_contentNote.getText().toString());
 
-                    //databaseHelper.getDatabaseName();
-                   // textViewTimestamp.setText(
-                   //         "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
-                    //                "\nCreated: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
+                    textViewTimestamp.setText(
+                                    "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
+                                    "Created: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
                 }
                 Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
-
+                database.close();
                 return false;
             }
         });

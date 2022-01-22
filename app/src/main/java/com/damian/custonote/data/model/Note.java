@@ -7,25 +7,24 @@ public class Note implements Serializable {
     int ID, Photo;
     String title, content;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
-    Boolean isBasicMode, isSynchronised;
+    Boolean isBasicMode, isSynchronised, isFavourite;
 
-
-    public Note(int ID, String title, String content/*, LocalDateTime timestampNoteCreated*/, Boolean isBasicMode) {
+    public Note(int ID, String title, String content/*, LocalDateTime timestampNoteCreated*/, Boolean isBasicMode, Boolean isFavourite) {
         this.ID = ID;
         this.title = title;
         this.content = content;
 //        this.timestampNoteCreated = timestampNoteCreated;
         this.isBasicMode = isBasicMode;
+        this.isFavourite = isFavourite;
     }
 
     public Note(int ID) {
         this.ID = ID;
     }
 
-    public Note(String title, String content/*, LocalDateTime timestampNoteCreated*/) {
+    public Note(String title, String content) {
         this.title = title;
         this.content = content;
-        //        this.timestampNoteCreated = timestampNoteCreated;
     }
 
     public Note() {
@@ -67,6 +66,14 @@ public class Note implements Serializable {
         this.content = content;
     }
 
+    public Boolean getIsBasicMode() {
+        return isBasicMode;
+    }
+
+    public void setIsBasicMode(Boolean isBasicMode) {
+        this.isBasicMode = isBasicMode;
+    }
+
     public LocalDateTime getTimestampNoteCreated() {
         return timestampNoteCreated;
     }
@@ -91,11 +98,20 @@ public class Note implements Serializable {
         Photo = photo;
     }
 
-    public Boolean getIsBasicMode() {
-        return isBasicMode;
+    public Boolean getIsFavourite() {
+        return isFavourite;
     }
 
-    public void setIsBasicMode(Boolean isBasicMode) {
-        this.isBasicMode = isBasicMode;
+    public void setIsFavourite(Boolean isFavourite) {
+        this.isFavourite = isFavourite;
     }
+
+    public Boolean getIsSynchronised() {
+        return isSynchronised;
+    }
+
+    public void setIsSynchronised(Boolean isSynchronised) {
+        this.isSynchronised = isSynchronised;
+    }
+
 }

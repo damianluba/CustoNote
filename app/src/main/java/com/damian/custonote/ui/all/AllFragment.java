@@ -21,6 +21,7 @@ import com.damian.custonote.data.model.Note;
 import com.damian.custonote.databinding.FragmentAllBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
@@ -70,7 +71,11 @@ public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
         bundleNoteData.putString("bundleTitle", note.getTitle()); 
         bundleNoteData.putString("bundleContent", note.getContent()); 
         bundleNoteData.putBoolean("bundleIsBasicMode", note.getIsBasicMode());
-//        bundleNoteData.putBoolean("bundleIsFavourite", note.getIsFavourite());
+        bundleNoteData.putString("bundleTimestampNoteCreated", note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
+        if(note.getTimestampNoteModified() != null)
+            bundleNoteData.putString("bundleTimestampNoteModified", note.getTimestampNoteModified().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
+        bundleNoteData.putBoolean("bundleIsFavourite", note.getIsFavourite());
+
         Intent intent = new Intent(getActivity(), NoteActivity.class);
         intent.putExtras(bundleNoteData);
         startActivity(intent);
