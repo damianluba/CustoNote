@@ -18,6 +18,16 @@ public class Note implements Serializable {
         this.isFavourite = isFavourite;
     }
 
+    public Note(String title, String content, Boolean isBasicMode, Boolean isFavourite, Boolean isSynchronised, LocalDateTime timestampNoteCreated, LocalDateTime timestampNoteModified) {
+        this.title = title;
+        this.content = content;
+        this.isBasicMode = isBasicMode;
+        this.isFavourite = isFavourite;
+        this.isSynchronised = isSynchronised;
+        this.timestampNoteCreated = timestampNoteCreated;
+        this.timestampNoteModified = timestampNoteModified;
+    }
+
     public Note(int ID) {
         this.ID = ID;
     }

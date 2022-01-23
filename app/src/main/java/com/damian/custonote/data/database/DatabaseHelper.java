@@ -75,15 +75,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         updatedValues.put(COL_TITLE, newTitle);
         updatedValues.put(COL_CONTENT, newContent);
         updatedValues.put(COL_TIMESTAMP_MODIFIED,  LocalDateTime.now().toString());
-//        updatedValues.put(COL_IS_FAVOURITE,  new);
-        updatedValues.put(COL_TIMESTAMP_MODIFIED,  LocalDateTime.now().toString());
+
         database.update(DATABASE_TABLE, updatedValues,  COL_ID + " = " + ID, null);
         database.close();
     }
 
     public void deleteNote(@NonNull Note note) {
         SQLiteDatabase database = this.getWritableDatabase();  //this is just in case if there is no parameters in
-        // this function
         Cursor cursor = database.rawQuery("DELETE FROM " + DATABASE_TABLE + " where " + COL_ID + " = " + note.getId(), null);
     }
 
