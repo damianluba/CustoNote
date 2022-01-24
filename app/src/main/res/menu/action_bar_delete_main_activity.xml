@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/itemMenuDelete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:iconTint="@color/white"
+        android:title="user's details"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menuItemSelectAll"
+        android:icon="@drawable/ic_select_all"
+        android:title="Search"
+        android:iconTint="@color/white"
+        app:showAsAction="always"/>
+
+</menu>

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class Note implements Serializable {
     int ID, Photo;
-    String title, content;
+    String title, content, st;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Boolean isBasicMode, isSynchronised, isFavourite;
 
@@ -123,5 +123,4 @@ public class Note implements Serializable {
     public void setIsSynchronised(Boolean isSynchronised) {
         this.isSynchronised = isSynchronised;
     }
-
 }

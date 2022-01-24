@@ -81,7 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deleteNote(@NonNull Note note) {
-        SQLiteDatabase database = this.getWritableDatabase();  //this is just in case if there is no parameters in
+        SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery("DELETE FROM " + DATABASE_TABLE + " where " + COL_ID + " = " + note.getId(), null);
     }
 
@@ -168,6 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 allNotes.add(note);
             } while(cursor.moveToNext());
         }
+        database.close();
         //https://stackoverflow.com/questions/51035283/cursorindexoutofboundsexception-index-0-requested-with-a-size
         // -of-0-in-android
         return allNotes;

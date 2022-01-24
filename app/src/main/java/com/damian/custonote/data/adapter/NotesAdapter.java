@@ -19,8 +19,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     Context context;
     List<Note> listNotes;
     private SelectedNote selectedNote;
+    private SelectedNoteToRemove selectedNoteToRemove;
+    private boolean checkingNotesInProgress;
 
-//    adapting the note to full view: https://larntech.net/recyclerview-onclicklistener-open-new-activity-filter-recyclerview-using-search-view/
+    //    adapting the note to full view: https://larntech.net/recyclerview-onclicklistener-open-new-activity-filter-recyclerview-using-search-view/
 
     public NotesAdapter(Context context, List<Note> listNotes, SelectedNote selectedNote) {
         this.context = context;
@@ -48,9 +50,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         holder.textViewContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-/* The id of the view which is clicked with in the item or
-    -1 if the item itself clicked */
-//                listener.onRecyclerViewItemClick(position, -1);
             }
         });
     }
@@ -74,18 +73,43 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    selectedNote.selectedNote(listNotes.get(getAdapterPosition()));
+                    if(!checkingNotesInProgress)
+                        selectedNote.selectedNote(listNotes.get(getAdapterPosition()));
+                    else checkItem();
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    //TODO delete the selected notes
+                    return false;
                 }
             });
         }
 
         @Override
         public void onClick(View view) {
-//            onNoteListener.onNoteClick(getAdapterPosition());
         }
     }
 
+    private void checkItem() {
+
+    }
+
+    /*private void deleteItem(int position) {
+        mDataSet.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mDataSet.size());
+        holder.itemView.setVisibility(View.GONE);
+    }*/
+
     public interface SelectedNote {
         void selectedNote(Note note);
+    }
+
+    public interface SelectedNoteToRemove {
+        void selectedNoteToRemove(Note note);
     }
 }

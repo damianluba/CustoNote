@@ -23,7 +23,7 @@ import com.damian.custonote.databinding.ActivitySearchableBinding;
 
 import java.util.List;
 
-public class SearchableActivity extends AppCompatActivity implements NotesAdapter.SelectedNote {
+public class SearchableActivity extends AppCompatActivity implements NotesAdapter.SelectedNote, NotesAdapter.SelectedNoteToRemove {
     private ActivitySearchableBinding binding;
     SearchView searchView;
     MenuItem menuItemSearchView;
@@ -90,6 +90,18 @@ public class SearchableActivity extends AppCompatActivity implements NotesAdapte
 
     @Override
     public void selectedNote(Note note) {
-        startActivity(new Intent(getApplicationContext(), NoteActivity.class).putExtra("data", note));
+        Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
+        intent.putExtra("bundleNote", note);
+        startActivity(intent);
     }
+
+    @Override
+    public void selectedNoteToRemove(Note note) {
+
+    }
+
+/*    @Override
+    public void SelectedNoteToRemove(Note note) {
+        Toast.makeText(this.getApplicationContext(), "Test", Toast.LENGTH_LONG).show();
+    }*/
 }

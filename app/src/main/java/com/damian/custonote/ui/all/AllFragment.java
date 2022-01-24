@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,7 +22,6 @@ import com.damian.custonote.data.model.Note;
 import com.damian.custonote.databinding.FragmentAllBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
@@ -30,6 +30,7 @@ public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
     List<Note> listNotes;
     private AllViewModel allViewModel;
     private FragmentAllBinding binding;
+    CheckBox checkBoxRemoveNote;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
 
         fabAddNote = getActivity().findViewById(R.id.fabAdd);
         fabAddNote.setImageResource(R.drawable.ic_add_note);
+
         fabAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,33 +55,23 @@ public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
         Log.i("database records quantity - after launching", String.valueOf(listNotes.size()));
         NotesAdapter notesAdapter = new NotesAdapter(getActivity().getApplicationContext(), listNotes, this);
 
-        //press the desired row to show the note in details
-        recyclerViewAllNotes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
-//        recyclerViewAllNotes.setOnLongClickListener(/*mark  as a note to delete*/);
         recyclerViewAllNotes.setAdapter(notesAdapter);
+
+        //the methods for clicks in a note content are defined in NotesAdapter
         return root;
     }
 
     @Override
     public void selectedNote(Note note) {   //passing the note data to another activity
-        Bundle bundleNoteData = new Bundle();
-        bundleNoteData.putInt("bundleId", note.getId()); 
-        bundleNoteData.putString("bundleTitle", note.getTitle()); 
-        bundleNoteData.putString("bundleContent", note.getContent()); 
-        bundleNoteData.putBoolean("bundleIsBasicMode", note.getIsBasicMode());
-        bundleNoteData.putString("bundleTimestampNoteCreated", note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
-        if(note.getTimestampNoteModified() != null)
-            bundleNoteData.putString("bundleTimestampNoteModified", note.getTimestampNoteModified().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
-        bundleNoteData.putBoolean("bundleIsFavourite", note.getIsFavourite());
-
         Intent intent = new Intent(getActivity(), NoteActivity.class);
-        intent.putExtras(bundleNoteData);
+        intent.putExtra("bundleNote", note);
         startActivity(intent);
     }
+
+/*    @Override
+    public void SelectedNoteToRemove(Note note) {
+
+    }*/
 
     @Override
     public void onDestroyView() {

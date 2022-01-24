@@ -74,17 +74,14 @@ public class NoteActivity extends AppCompatActivity {
         intent = getIntent();
         if(intent.getExtras() != null) { //if there are delivered some data from previous activity
             //it means that THE NOTE ALREADY EXISTS and is opened in view mode
-            note = new Note();
-            note.setID(intent.getIntExtra("bundleId", 0));
-            note.setTitle(intent.getStringExtra("bundleTitle"));
-            note.setContent(intent.getStringExtra("bundleContent"));
-            note.setIsBasicMode(intent.getBooleanExtra("bundleIsBasicMode", true));
-            note.setIsFavourite(intent.getBooleanExtra("bundleIsFavourite", false));
+            note = (Note) intent.getSerializableExtra("bundleNote");
 
             editTextTitle_contentNote.setText(note.getTitle());
             editTextContent_contentNote.setText(note.getContent());
-            textViewTimestamp.setText("Created: " + intent.getStringExtra("bundleTimestampNoteCreated") +
-                                                        "\nModified: " + intent.getStringExtra("bundleTimestampNoteModified"));
+
+            textViewTimestamp.setText("Created: " + note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
+            if(note.getTimestampNoteModified() != null) //if a note wasn't modified
+                textViewTimestamp.setText(textViewTimestamp.getText() + "\nModified: " + note.getTimestampNoteModified().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
 
         } else { //THE NOTE WASN'T MODIFIED BEFORE
             // there aren't delivered any information so the note can be created by a user
@@ -178,14 +175,6 @@ public class NoteActivity extends AppCompatActivity {
             menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.blue))); //setting the color of the item
             toolbarAlignText.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void initialiseAdvancedToolbar() {
-        toolbarAlignText.setVisibility(View.VISIBLE);
-    }
-
-    private void hideAdvancedToolbar() {
-        toolbarAlignText.setVisibility(View.GONE);
     }
 
     @Override
