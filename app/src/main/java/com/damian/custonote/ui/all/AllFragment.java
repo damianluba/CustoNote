@@ -24,7 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
+public class AllFragment extends Fragment implements NotesAdapter.OnSelectedNoteListener {
     RecyclerView recyclerViewAllNotes;
     FloatingActionButton fabAddNote;
     List<Note> listNotes;
@@ -62,11 +62,18 @@ public class AllFragment extends Fragment implements NotesAdapter.SelectedNote {
     }
 
     @Override
-    public void selectedNote(Note note) {   //passing the note data to another activity
+    public void onNoteClickListener(Note note) {   //passing the note data to another activity
         Intent intent = new Intent(getActivity(), NoteActivity.class);
         intent.putExtra("bundleNote", note);
         startActivity(intent);
     }
+
+/*    @Override
+    public void onLongNoteClickListener(Note note) {
+        Intent intent = new Intent(getActivity(), NoteActivity.class);
+        intent.putExtra("bundleNote", note);
+        startActivity(intent);
+    }*/
 
 /*    @Override
     public void SelectedNoteToRemove(Note note) {

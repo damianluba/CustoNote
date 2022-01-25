@@ -126,6 +126,7 @@ public class NoteActivity extends AppCompatActivity {
                                     "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
                                     "Created: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
                 }
+
                 Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
                 database.close();
                 return false;

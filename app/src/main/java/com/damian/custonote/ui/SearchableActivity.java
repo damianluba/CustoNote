@@ -23,7 +23,7 @@ import com.damian.custonote.databinding.ActivitySearchableBinding;
 
 import java.util.List;
 
-public class SearchableActivity extends AppCompatActivity implements NotesAdapter.SelectedNote, NotesAdapter.SelectedNoteToRemove {
+public class SearchableActivity extends AppCompatActivity implements NotesAdapter.OnSelectedNoteListener {
     private ActivitySearchableBinding binding;
     SearchView searchView;
     MenuItem menuItemSearchView;
@@ -57,7 +57,7 @@ public class SearchableActivity extends AppCompatActivity implements NotesAdapte
             public boolean onQueryTextChange(String phrase) {
                 DatabaseHelper databaseHelper = new DatabaseHelper(getBaseContext());
                 List<Note> listFoundNotes = databaseHelper.findNoteWithPhrase(phrase);
-                NotesAdapter notesAdapter = new NotesAdapter(getBaseContext(), listFoundNotes, SearchableActivity.this::selectedNote);
+                NotesAdapter notesAdapter = new NotesAdapter(getBaseContext(), listFoundNotes, SearchableActivity.this::onNoteClickListener);
                 recyclerViewSearchedNotes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -89,16 +89,19 @@ public class SearchableActivity extends AppCompatActivity implements NotesAdapte
     }
 
     @Override
-    public void selectedNote(Note note) {
+    public void onNoteClickListener(Note note) {
         Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
         intent.putExtra("bundleNote", note);
         startActivity(intent);
     }
 
-    @Override
-    public void selectedNoteToRemove(Note note) {
+/*    @Override
+    public void onLongNoteClickListener(Note note) {
+        Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
+        intent.putExtra("bundleNote", note);
+        startActivity(intent);
+    }*/
 
-    }
 
 /*    @Override
     public void SelectedNoteToRemove(Note note) {

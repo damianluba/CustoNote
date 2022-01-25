@@ -18,16 +18,15 @@ import java.util.List;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositionViewHolder> {
     Context context;
     List<Note> listNotes;
-    private SelectedNote selectedNote;
-    private SelectedNoteToRemove selectedNoteToRemove;
+    private OnSelectedNoteListener onSelectedNoteListener;
     private boolean checkingNotesInProgress;
 
     //    adapting the note to full view: https://larntech.net/recyclerview-onclicklistener-open-new-activity-filter-recyclerview-using-search-view/
 
-    public NotesAdapter(Context context, List<Note> listNotes, SelectedNote selectedNote) {
+    public NotesAdapter(Context context, List<Note> listNotes, OnSelectedNoteListener onSelectedNoteListener) {
         this.context = context;
         this.listNotes = listNotes;
-        this.selectedNote = selectedNote;
+        this.onSelectedNoteListener = onSelectedNoteListener;
     }
 
     public NotesAdapter(Context context, List<Note> listNotes) {
@@ -74,7 +73,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
                 @Override
                 public void onClick(View view) {
                     if(!checkingNotesInProgress)
-                        selectedNote.selectedNote(listNotes.get(getAdapterPosition()));
+                        onSelectedNoteListener.onNoteClickListener(listNotes.get(getAdapterPosition()));
                     else checkItem();
                 }
             });
@@ -105,11 +104,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         holder.itemView.setVisibility(View.GONE);
     }*/
 
-    public interface SelectedNote {
-        void selectedNote(Note note);
+    public interface OnSelectedNoteListener {
+        void onNoteClickListener(Note note);
+//        void onLongNoteClickListener(Note note);
     }
 
-    public interface SelectedNoteToRemove {
-        void selectedNoteToRemove(Note note);
-    }
 }

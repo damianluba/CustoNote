@@ -123,4 +123,8 @@ public class Note implements Serializable {
     public void setIsSynchronised(Boolean isSynchronised) {
         this.isSynchronised = isSynchronised;
     }
+
+    public enum Color {
+        Red, Blue, Yellow
+    }
 }
