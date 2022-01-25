@@ -23,7 +23,7 @@ import com.damian.custonote.databinding.ActivitySearchableBinding;
 
 import java.util.List;
 
-public class SearchableActivity extends AppCompatActivity implements NotesAdapter.OnSelectedNoteListener {
+public class SearchableActivity extends AppCompatActivity {
     private ActivitySearchableBinding binding;
     SearchView searchView;
     MenuItem menuItemSearchView;
@@ -55,15 +55,23 @@ public class SearchableActivity extends AppCompatActivity implements NotesAdapte
 
             @Override
             public boolean onQueryTextChange(String phrase) {
-                DatabaseHelper databaseHelper = new DatabaseHelper(getBaseContext());
+                DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
                 List<Note> listFoundNotes = databaseHelper.findNoteWithPhrase(phrase);
-                NotesAdapter notesAdapter = new NotesAdapter(getBaseContext(), listFoundNotes, SearchableActivity.this::onNoteClickListener);
-                recyclerViewSearchedNotes.setOnClickListener(new View.OnClickListener() {
+                NotesAdapter notesAdapter = new NotesAdapter(getApplicationContext(), listFoundNotes, new NotesAdapter.OnSelectedNoteListener() {
                     @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(getBaseContext(), NoteActivity.class));
+                    public void onNoteClickListener(int position, View view) {
+                        Intent intent = new Intent(SearchableActivity.this, NoteActivity.class);
+                        Note note = listFoundNotes.get(position);
+                        intent.putExtra("bundleNote", note);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onLongNoteClickListener(int position, View view) {
+                        Toast.makeText(SearchableActivity.this, "longer press", Toast.LENGTH_LONG).show();
                     }
                 });
+
                 if(!phrase.isEmpty()) {
                     if(listFoundNotes != null) {
                         recyclerViewSearchedNotes.setVisibility(View.VISIBLE);
@@ -88,12 +96,12 @@ public class SearchableActivity extends AppCompatActivity implements NotesAdapte
         }
     }
 
-    @Override
+/*    @Override
     public void onNoteClickListener(Note note) {
         Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
         intent.putExtra("bundleNote", note);
         startActivity(intent);
-    }
+    }*/
 
 /*    @Override
     public void onLongNoteClickListener(Note note) {

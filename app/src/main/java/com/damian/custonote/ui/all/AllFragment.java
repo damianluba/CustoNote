@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,7 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-public class AllFragment extends Fragment implements NotesAdapter.OnSelectedNoteListener {
+public class AllFragment extends Fragment{
     RecyclerView recyclerViewAllNotes;
     FloatingActionButton fabAddNote;
     List<Note> listNotes;
@@ -53,32 +54,28 @@ public class AllFragment extends Fragment implements NotesAdapter.OnSelectedNote
         DatabaseHelper databaseHelper = new DatabaseHelper(getActivity().getApplicationContext());
         listNotes = databaseHelper.getNotes();
         Log.i("database records quantity - after launching", String.valueOf(listNotes.size()));
-        NotesAdapter notesAdapter = new NotesAdapter(getActivity().getApplicationContext(), listNotes, this);
+
+        //this adapter creates 2 listeners for common click and long click
+        NotesAdapter notesAdapter = new NotesAdapter(getContext().getApplicationContext(), listNotes, new NotesAdapter.OnSelectedNoteListener() {
+            @Override
+            public void onNoteClickListener(int position, View view) {
+                Intent intent = new Intent(getActivity(), NoteActivity.class);
+                Note note = listNotes.get(position);
+                intent.putExtra("bundleNote", note);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongNoteClickListener(int position, View view) {
+                Toast.makeText(getContext().getApplicationContext(), "longer press", Toast.LENGTH_LONG).show();
+            }
+        });
 
         recyclerViewAllNotes.setAdapter(notesAdapter);
 
         //the methods for clicks in a note content are defined in NotesAdapter
         return root;
     }
-
-    @Override
-    public void onNoteClickListener(Note note) {   //passing the note data to another activity
-        Intent intent = new Intent(getActivity(), NoteActivity.class);
-        intent.putExtra("bundleNote", note);
-        startActivity(intent);
-    }
-
-/*    @Override
-    public void onLongNoteClickListener(Note note) {
-        Intent intent = new Intent(getActivity(), NoteActivity.class);
-        intent.putExtra("bundleNote", note);
-        startActivity(intent);
-    }*/
-
-/*    @Override
-    public void SelectedNoteToRemove(Note note) {
-
-    }*/
 
     @Override
     public void onDestroyView() {

@@ -15,6 +15,7 @@ import com.damian.custonote.data.model.Note;
 
 import java.util.List;
 
+//https://riptutorial.com/android/example/2992/easy-onlongclick-and-onclick-example
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositionViewHolder> {
     Context context;
     List<Note> listNotes;
@@ -38,7 +39,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     public NotesPositionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.layout_single_note_in_browsing, parent, false);
-        return new NotesPositionViewHolder(view);
+        return new NotesPositionViewHolder(view, this);
     }
 
     @Override
@@ -58,38 +59,31 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         return listNotes.size();
     }
 
-    public class NotesPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class NotesPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView textViewTitle, textViewContent;
         ImageView imageViewMainImageOfNote;
-//        OnNoteListener onNoteListener;
+        NotesAdapter notesAdapter;
 
-        public NotesPositionViewHolder(@NonNull View itemView) {
+        public NotesPositionViewHolder(@NonNull View itemView, @NonNull NotesAdapter notesAdapter) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             textViewContent = itemView.findViewById(R.id.textViewContent);
+            this.notesAdapter = notesAdapter;
 //            imageViewMainImageOfNote = itemView.findViewById(R.id.imageViewMainImageOfNote);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(!checkingNotesInProgress)
-                        onSelectedNoteListener.onNoteClickListener(listNotes.get(getAdapterPosition()));
-                    else checkItem();
-                }
-            });
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-
-                    //TODO delete the selected notes
-                    return false;
-                }
-            });
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
+            onSelectedNoteListener.onNoteClickListener(getAdapterPosition(), view);
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            onSelectedNoteListener.onLongNoteClickListener(getAdapterPosition(), view);
+            return false;
         }
     }
 
@@ -105,8 +99,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     }*/
 
     public interface OnSelectedNoteListener {
-        void onNoteClickListener(Note note);
-//        void onLongNoteClickListener(Note note);
+        void onNoteClickListener(int position, View view);
+        void onLongNoteClickListener(int position, View view);
     }
+
+    public void setOnNoteClickListener(OnSelectedNoteListener onSelectedNoteListener) {
+        this.onSelectedNoteListener = onSelectedNoteListener;
+    }
+
 
 }
