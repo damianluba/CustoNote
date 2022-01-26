@@ -77,18 +77,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
 
         @Override
         public void onClick(View view) {
-            onSelectedNoteListener.onNoteClickListener(getAdapterPosition(), view);
+            onSelectedNoteListener.onNoteClickListener(getAdapterPosition());
         }
 
         @Override
         public boolean onLongClick(View view) {
-            onSelectedNoteListener.onLongNoteClickListener(getAdapterPosition(), view);
+            onSelectedNoteListener.onLongNoteClickListener(getAdapterPosition());
             return false;
         }
-    }
-
-    private void checkItem() {
-
     }
 
     /*private void deleteItem(int position) {
@@ -99,13 +95,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     }*/
 
     public interface OnSelectedNoteListener {
-        void onNoteClickListener(int position, View view);
-        void onLongNoteClickListener(int position, View view);
+        void onNoteClickListener(int position);
+        void onLongNoteClickListener(int position);
     }
 
     public void setOnNoteClickListener(OnSelectedNoteListener onSelectedNoteListener) {
         this.onSelectedNoteListener = onSelectedNoteListener;
     }
-
-
 }

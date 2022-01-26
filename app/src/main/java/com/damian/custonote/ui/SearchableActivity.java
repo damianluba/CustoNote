@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.damian.custonote.NoteActivity;
 import com.damian.custonote.R;
 import com.damian.custonote.data.adapter.NotesAdapter;
 import com.damian.custonote.data.database.DatabaseHelper;
@@ -59,7 +58,7 @@ public class SearchableActivity extends AppCompatActivity {
                 List<Note> listFoundNotes = databaseHelper.findNoteWithPhrase(phrase);
                 NotesAdapter notesAdapter = new NotesAdapter(getApplicationContext(), listFoundNotes, new NotesAdapter.OnSelectedNoteListener() {
                     @Override
-                    public void onNoteClickListener(int position, View view) {
+                    public void onNoteClickListener(int position) {
                         Intent intent = new Intent(SearchableActivity.this, NoteActivity.class);
                         Note note = listFoundNotes.get(position);
                         intent.putExtra("bundleNote", note);
@@ -67,7 +66,7 @@ public class SearchableActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onLongNoteClickListener(int position, View view) {
+                    public void onLongNoteClickListener(int position) {
                         Toast.makeText(SearchableActivity.this, "longer press", Toast.LENGTH_LONG).show();
                     }
                 });

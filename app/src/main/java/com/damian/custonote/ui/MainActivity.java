@@ -1,13 +1,11 @@
-package com.damian.custonote;
+package com.damian.custonote.ui;
 
 import android.app.Dialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -21,7 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.damian.custonote.ui.SearchableActivity;
+import com.damian.custonote.R;
 import com.damian.custonote.ui.all.AllFragment;
 import com.damian.custonote.ui.favourites.FavouritesFragment;
 import com.damian.custonote.ui.labels.LabelsFragment;
@@ -33,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewUsername, textViewEmail;
     Button buttonLogIn;
     MenuItem menuItemImageUser, menuItemSearch;
-    InputMethodManager imm;
     Dialog dialogBasicInfoAboutUser;
     FloatingActionButton fabAdd;
     Context context;
@@ -53,8 +50,7 @@ public class MainActivity extends AppCompatActivity {
         toolbarMain = findViewById(R.id.toolbar);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_all,
-                R.id.navigation_favourites, R.id.navigation_labels).build();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_all, R.id.navigation_favourites, R.id.navigation_labels).build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNavView, navController); //fragments switch's support
@@ -125,13 +121,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onSearchRequested();
     }
 
-    private void handleIntent(Intent intent) {
-        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //            doMySearch(query);
-        }
-    }
-
     public void showDialog() {
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.layout_dialog_basic_info_about_user);
@@ -140,17 +129,5 @@ public class MainActivity extends AppCompatActivity {
         buttonLogIn = findViewById(R.id.buttonLogIn);
         dialog.show();
         // creates an instance of the dialog fragment and shows it
-    }
-
-    public void showSystemKeyboard(Context context) {
-        imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-        //        imm.showSoftInput(textInputEditTextSearch, InputMethodManager.SHOW_IMPLICIT);
-        //        recyclerView.setAlpha(0.2f); //set the recycler view transparency to focus on search
-    }
-
-    public void hideSystemKeyboard(Context context) {
-        imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
-        //        imm.hideSoftInputFromWindow(textInputEditTextSearch.getWindowToken(), 0);
-        //        recyclerView.setAlpha(1); //set the recycler view transparency to focus on search
     }
 }

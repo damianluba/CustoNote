@@ -1,12 +1,22 @@
-package com.damian.custonote;
+package com.damian.custonote.ui;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,8 +26,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
+import com.damian.custonote.R;
 import com.damian.custonote.data.database.DatabaseHelper;
 import com.damian.custonote.data.model.Note;
 import com.damian.custonote.databinding.ActivityNoteBinding;
@@ -39,9 +49,7 @@ public class NoteActivity extends AppCompatActivity {
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Context context;
     Intent intent;
-    int receivedNoteId;
-    String receivedTitle, receivedContent, receivedTimestampCreated, receivedTimestampModified;
-    boolean receivedIsBasicMode, receivedIsFavourite, receivedIsSynchronised;
+    SpannableString spannableString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,23 +78,32 @@ public class NoteActivity extends AppCompatActivity {
         textViewTimestamp = findViewById(R.id.textViewTimestamp);
         toolbarAlignText = findViewById(R.id.toolbarAlignText);
 
-        //RECEIVING DATA FROM PREVIOUS ACTIVITY
+
+        //------------------------------------------------RECEIVING DATA FROM PREVIOUS ACTIVITY and OPENING THE NOTE ----------------------------------------------------------
         intent = getIntent();
         if(intent.getExtras() != null) { //if there are delivered some data from previous activity
             //it means that THE NOTE ALREADY EXISTS and is opened in view mode
             note = (Note) intent.getSerializableExtra("bundleNote");
+            textViewTimestamp.setVisibility(View.VISIBLE);
+
+            spannableString = new SpannableString(note.getContent());
+            spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), 0, note.getContent().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            spannableString.setSpan(new UnderlineSpan(), 0, note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            spannableString.setSpan(new StyleSpan(Typeface.BOLD),0,note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
             editTextTitle_contentNote.setText(note.getTitle());
-            editTextContent_contentNote.setText(note.getContent());
+            editTextContent_contentNote.setText(spannableString);
 
             textViewTimestamp.setText("Created: " + note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
             if(note.getTimestampNoteModified() != null) //if a note wasn't modified
                 textViewTimestamp.setText(textViewTimestamp.getText() + "\nModified: " + note.getTimestampNoteModified().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
-
         } else { //THE NOTE WASN'T MODIFIED BEFORE
             // there aren't delivered any information so the note can be created by a user
+            textViewTimestamp.setVisibility(View.GONE);
             note = new Note(null, null, true, false, false, null, null);
-            editTextContent_contentNote.requestFocus();
+            showSystemKeyboard();
         }
     }
 
@@ -107,16 +124,16 @@ public class NoteActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 timestampNoteModified = LocalDateTime.now(); //it needs to be done objectively
                 timestampNoteCreated = timestampNoteModified;
+                textViewTimestamp.setVisibility(View.VISIBLE);
+
                 if(note.getId() == 0) {//if a note was already opened as a new note
                     textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
 
-                    //here attributes isFavourite, isBasicMode aren't saved -  as only a user clicks marks a note as favourite, makes changes in note data
+                    //here attributes isFavourite and isBasicMode aren't saved -  as only a user clicks marks a note as favourite, makes changes in note data
                     note = new Note(editTextTitle_contentNote.getText().toString(), editTextContent_contentNote.getText().toString()/*,timestampNoteCreated*/); //TODO
-                    // TODO here you must transform all temporary note changes to data in the note structure
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
                     databaseHelper.addNote(note);
-
                 } else { //if not modified the first time
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
@@ -180,13 +197,18 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //        this.finish();
         super.onBackPressed();
     }
 
     @Override
     public boolean onSupportNavigateUp() { //called when user press back arrow to go up in the view hierarchy
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_note);
-        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+        onBackPressed();
+        return true;
+    }
+
+    public void showSystemKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        editTextContent_contentNote.requestFocus();
+        imm.showSoftInput(editTextContent_contentNote, InputMethodManager.SHOW_IMPLICIT);
     }
 }

@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.damian.custonote.NoteActivity;
+import com.damian.custonote.ui.NoteActivity;
 import com.damian.custonote.R;
 import com.damian.custonote.data.adapter.NotesAdapter;
 import com.damian.custonote.data.database.DatabaseHelper;
@@ -58,7 +58,7 @@ public class AllFragment extends Fragment{
         //this adapter creates 2 listeners for common click and long click
         NotesAdapter notesAdapter = new NotesAdapter(getContext().getApplicationContext(), listNotes, new NotesAdapter.OnSelectedNoteListener() {
             @Override
-            public void onNoteClickListener(int position, View view) {
+            public void onNoteClickListener(int position) {
                 Intent intent = new Intent(getActivity(), NoteActivity.class);
                 Note note = listNotes.get(position);
                 intent.putExtra("bundleNote", note);
@@ -66,7 +66,7 @@ public class AllFragment extends Fragment{
             }
 
             @Override
-            public void onLongNoteClickListener(int position, View view) {
+            public void onLongNoteClickListener(int position) {
                 Toast.makeText(getContext().getApplicationContext(), "longer press", Toast.LENGTH_LONG).show();
             }
         });

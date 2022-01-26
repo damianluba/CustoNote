@@ -48,6 +48,8 @@
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
                 android:textSize="20sp"
+                android:focusable="true"
+                android:ellipsize="end"
                 tools:text="@string/sampleTextInNoteContent" />
 
         </LinearLayout>
