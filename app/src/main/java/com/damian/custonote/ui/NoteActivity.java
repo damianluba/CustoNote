@@ -6,18 +6,23 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.AlignmentSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +55,8 @@ public class NoteActivity extends AppCompatActivity {
     Context context;
     Intent intent;
     SpannableString spannableString;
+    Typeface typeface;
+    Toolbar toolbarTextTools;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +83,9 @@ public class NoteActivity extends AppCompatActivity {
         editTextTitle_contentNote = findViewById(R.id.editTextTitle_contentNote);
         editTextContent_contentNote = findViewById(R.id.editTextContent_contentNote);
         textViewTimestamp = findViewById(R.id.textViewTimestamp);
+        toolbarTextTools = findViewById(R.id.toolbarTextTools);
         toolbarAlignText = findViewById(R.id.toolbarAlignText);
+
 
 
         //------------------------------------------------RECEIVING DATA FROM PREVIOUS ACTIVITY and OPENING THE NOTE ----------------------------------------------------------
@@ -86,15 +95,12 @@ public class NoteActivity extends AppCompatActivity {
             note = (Note) intent.getSerializableExtra("bundleNote");
             textViewTimestamp.setVisibility(View.VISIBLE);
 
-            spannableString = new SpannableString(note.getContent());
-            spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), 0, note.getContent().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-            spannableString.setSpan(new UnderlineSpan(), 0, note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            spannableString.setSpan(new StyleSpan(Typeface.BOLD),0,note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-            spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            if(note.getIsBasicMode())
+                HideAdvancedButtonsForAdvancedMode();
+            else configureButtonsForAdvancedMode();
 
             editTextTitle_contentNote.setText(note.getTitle());
-            editTextContent_contentNote.setText(spannableString);
+            editTextContent_contentNote.setText(note.getContent());
 
             textViewTimestamp.setText("Created: " + note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
             if(note.getTimestampNoteModified() != null) //if a note wasn't modified
@@ -117,8 +123,10 @@ public class NoteActivity extends AppCompatActivity {
 
         //started buttons configuration
         coloriseStar();
-        organiseComponentsRelevantWithTextFormatting();
+        showButtonsForAdvancedMode();
 
+
+        //----------------------------------------------------------SAVING-------------------------------------------------------------------------------------
         menuItemSave.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() { // SAVING A NOTE
             @Override        //save a note
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -130,7 +138,7 @@ public class NoteActivity extends AppCompatActivity {
                     textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
 
                     //here attributes isFavourite and isBasicMode aren't saved -  as only a user clicks marks a note as favourite, makes changes in note data
-                    note = new Note(editTextTitle_contentNote.getText().toString(), editTextContent_contentNote.getText().toString()/*,timestampNoteCreated*/); //TODO
+                    note = new Note(editTextTitle_contentNote.getText().toString(), editTextContent_contentNote.getText().toString()); //TODO
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
                     databaseHelper.addNote(note);
@@ -170,29 +178,12 @@ public class NoteActivity extends AppCompatActivity {
         menuItemSwitchMode.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Toolbar toolbarTextTools = findViewById(R.id.toolbarTextTools);
                 note.setIsBasicMode(!note.getIsBasicMode());
-                organiseComponentsRelevantWithTextFormatting();
+                showButtonsForAdvancedMode();
                 return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
-    }
-
-    private void coloriseStar() {
-        if(note.getIsFavourite())
-            menuItemStar.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.yellow))); //setting the color of the item
-         else menuItemStar.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
-    }
-
-    private void organiseComponentsRelevantWithTextFormatting() {
-        if(note.getIsBasicMode()) {
-            menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
-            toolbarAlignText.setVisibility(View.GONE);
-        } else {
-            menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.blue))); //setting the color of the item
-            toolbarAlignText.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -210,5 +201,87 @@ public class NoteActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         editTextContent_contentNote.requestFocus();
         imm.showSoftInput(editTextContent_contentNote, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public void configureButtonsForAdvancedMode() {
+        toolbarAlignText.setVisibility(View.VISIBLE);
+
+        ImageView imageViewBold = findViewById(R.id.imageViewBold);
+        imageViewBold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spannableString.setSpan(new StyleSpan(Typeface.BOLD),0,note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), 0, note.getContent().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                spannableString.setSpan(new UnderlineSpan(), 0, note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        });
+
+        ImageView imageViewCursive = findViewById(R.id.imageViewCursive);
+        imageViewCursive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spannableString.setSpan(new StyleSpan(Typeface.ITALIC) , editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        });
+
+        ImageView imageViewUnderline = findViewById(R.id.imageViewUnderline);
+        imageViewUnderline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spannableString.setSpan(new UnderlineSpan(), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        });
+
+        ImageView imageViewAlign = findViewById(R.id.imageViewAlign);
+        imageViewAlign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spannableString.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        });
+
+        Button buttonFont = findViewById(R.id.buttonFontSize);
+        buttonFont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spannableString.setSpan(new RelativeSizeSpan(2f), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        });
+
+        Button buttonTextColor = findViewById(R.id.buttonTextColor);
+        buttonTextColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spannableString.setSpan(new RelativeSizeSpan(2f), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        });
+
+
+    }
+
+    private void coloriseStar() {
+        if(note.getIsFavourite())
+            menuItemStar.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.yellow))); //setting the color of the item
+        else menuItemStar.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
+    }
+
+    private void showButtonsForAdvancedMode() {
+        if(note.getIsBasicMode()) {
+            menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
+            toolbarAlignText.setVisibility(View.GONE);
+            toolbarTextTools.setVisibility(View.GONE);
+        } else {
+            menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.blue))); //setting the color of the item
+            toolbarTextTools.setVisibility(View.VISIBLE);
+            toolbarAlignText.setVisibility(View.VISIBLE);
+            configureButtonsForAdvancedMode();
+        }
+    }
+
+    public void HideAdvancedButtonsForAdvancedMode() {
+            toolbarTextTools.setVisibility(View.GONE);
+            toolbarAlignText.setVisibility(View.GONE);
     }
 }

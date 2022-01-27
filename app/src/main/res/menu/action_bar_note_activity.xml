@@ -8,12 +8,14 @@
         android:iconTint="@color/white"
         android:iconTintMode="src_atop"
         android:title="Switch mode of the note"
+        android:tooltipText="switch mode of editing the note"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/itemDelete"
         android:icon="@drawable/ic_delete"
         android:title="Delete the note"
+        android:tooltipText="delete the note"
         app:showAsAction="always" />
 
     <item
@@ -21,6 +23,7 @@
         android:icon="@drawable/ic_save"
         android:iconTint="@color/bright_grey"
         android:title="Save the note"
+        android:tooltipText="save the note"
         app:showAsAction="always" />
 
     <item
@@ -28,6 +31,7 @@
         android:icon="@drawable/ic_star"
         android:iconTint="@color/bright_grey"
         android:title="Mark the note as favourite"
+        android:tooltipText="mark as favourite"
         app:showAsAction="always" />
 
 </menu>

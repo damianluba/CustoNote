@@ -1,4 +1,4 @@
-package com.damian.custonote.ui;
+package com.damian.custonote;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -19,7 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.damian.custonote.R;
+import com.damian.custonote.ui.SearchableActivity;
 import com.damian.custonote.ui.all.AllFragment;
 import com.damian.custonote.ui.favourites.FavouritesFragment;
 import com.damian.custonote.ui.labels.LabelsFragment;

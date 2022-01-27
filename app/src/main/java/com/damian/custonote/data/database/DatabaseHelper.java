@@ -83,6 +83,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteNote(@NonNull Note note) {
         SQLiteDatabase database = this.getWritableDatabase();
         Cursor cursor = database.rawQuery("DELETE FROM " + DATABASE_TABLE + " where " + COL_ID + " = " + note.getId(), null);
+        database.close();
+        //        db.delete(DATABASE_TABLE,COL_ID+" =?", new String[]{String.valueOf(person.getId())});
     }
 
     public Cursor getData() {

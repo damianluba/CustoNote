@@ -4,15 +4,17 @@
     <item
         android:id="@+id/menuItemSearch"
         android:icon="@drawable/ic_search"
-        android:title="Search"
         android:iconTint="@color/white"
-        app:showAsAction="always"/>
+        android:title="Search"
+        android:tooltipText="search notes"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/itemImageUser"
         android:icon="@drawable/ic_user"
         android:iconTint="@color/white"
         android:title="user's details"
+        android:tooltipText="my account"
         app:showAsAction="always" />
 
 </menu>
