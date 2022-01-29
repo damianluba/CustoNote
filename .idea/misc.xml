@@ -29,7 +29,7 @@
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout-w936dp/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_login.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_note.xml" value="0.5" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_note.xml" value="0.33" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_search.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_searchable.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_splash.xml" value="0.28489583333333335" />
@@ -52,8 +52,10 @@
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/fragment_notifications.xml" value="0.32083333333333336" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_advanced_tools.xml" value="0.20520231213872833" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_align.xml" value="0.75" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_dialog_color_palette.xml" value="0.24479166666666666" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_single_note.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_single_note_in_browsing.xml" value="0.25" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/switch_item.xml" value="0.1796875" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/test_fragment.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/menu/action_bar_main_activity.xml" value="0.22" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/menu/action_bar_note_activity.xml" value="0.22" />

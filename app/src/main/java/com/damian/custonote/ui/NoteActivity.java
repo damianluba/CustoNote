@@ -1,5 +1,6 @@
 package com.damian.custonote.ui;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -46,7 +48,7 @@ public class NoteActivity extends AppCompatActivity {
     private ActivityNoteBinding binding;
     Note note;
     TextView textViewTimestamp;
-    MenuItem menuItemSave, menuItemStar, menuItemDelete, menuItemSwitchMode;
+    MenuItem menuItemSave, menuItemStar, menuItemDelete, menuItemSwitchMode, menuItemBackgroundColor;
     DatabaseHelper databaseHelper;
     SQLiteDatabase database;
     EditText editTextTitle_contentNote,  editTextContent_contentNote;
@@ -57,6 +59,8 @@ public class NoteActivity extends AppCompatActivity {
     SpannableString spannableString;
     Typeface typeface;
     Toolbar toolbarTextTools;
+    NestedScrollView nestedScrollView;
+    private FragmentRefreshListener fragmentRefreshListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +89,7 @@ public class NoteActivity extends AppCompatActivity {
         textViewTimestamp = findViewById(R.id.textViewTimestamp);
         toolbarTextTools = findViewById(R.id.toolbarTextTools);
         toolbarAlignText = findViewById(R.id.toolbarAlignText);
-
-
+        nestedScrollView = findViewById(R.id.nestedScrollView);
 
         //------------------------------------------------RECEIVING DATA FROM PREVIOUS ACTIVITY and OPENING THE NOTE ----------------------------------------------------------
         intent = getIntent();
@@ -101,6 +104,7 @@ public class NoteActivity extends AppCompatActivity {
 
             editTextTitle_contentNote.setText(note.getTitle());
             editTextContent_contentNote.setText(note.getContent());
+            nestedScrollView.setBackgroundColor(note.getColorBackgroundValue()); //make a background
 
             textViewTimestamp.setText("Created: " + note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
             if(note.getTimestampNoteModified() != null) //if a note wasn't modified
@@ -108,7 +112,7 @@ public class NoteActivity extends AppCompatActivity {
         } else { //THE NOTE WASN'T MODIFIED BEFORE
             // there aren't delivered any information so the note can be created by a user
             textViewTimestamp.setVisibility(View.GONE);
-            note = new Note(null, null, true, false, false, null, null);
+            note = new Note(null, null, true, false, false, null, null, Color.WHITE);
             showSystemKeyboard();
         }
     }
@@ -120,6 +124,7 @@ public class NoteActivity extends AppCompatActivity {
         menuItemDelete = menu.findItem(R.id.itemDelete);
         menuItemStar = menu.findItem(R.id.itemStar);
         menuItemSwitchMode = menu.findItem(R.id.itemSwitchMode);
+        menuItemBackgroundColor = menu.findItem(R.id.itemBackgroundColor);
 
         //started buttons configuration
         coloriseStar();
@@ -138,22 +143,26 @@ public class NoteActivity extends AppCompatActivity {
                     textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
 
                     //here attributes isFavourite and isBasicMode aren't saved -  as only a user clicks marks a note as favourite, makes changes in note data
-                    note = new Note(editTextTitle_contentNote.getText().toString(), editTextContent_contentNote.getText().toString()); //TODO
+                    note.setTitle(editTextTitle_contentNote.getText().toString());
+                    note.setContent(editTextContent_contentNote.getText().toString());
+
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
                     databaseHelper.addNote(note);
                 } else { //if not modified the first time
                     databaseHelper = new DatabaseHelper(context);
                     database = databaseHelper.getWritableDatabase();
-                    databaseHelper.updateNote(note.getId(), editTextContent_contentNote.getText().toString(), editTextTitle_contentNote.getText().toString());
+                    databaseHelper.updateNote(note.getId(), editTextContent_contentNote.getText().toString(), editTextTitle_contentNote.getText().toString(), note.getIsFavourite(), note.getColorBackgroundValue());
 
                     textViewTimestamp.setText(
                                     "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
-                                    "Created: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
+                                    "\nCreated: " + timestampNoteCreated.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
                 }
 
                 Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
                 database.close();
+
+                updateMainUi();
                 return false;
             }
         });
@@ -169,8 +178,12 @@ public class NoteActivity extends AppCompatActivity {
         menuItemStar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                note.setIsFavourite(!note.getIsFavourite()) ;
+                databaseHelper = new DatabaseHelper(context);
+                note.setIsFavourite(!note.getIsFavourite());
                 coloriseStar();
+                database = databaseHelper.getWritableDatabase();
+                databaseHelper.markOrUnmarkNoteAsFavourite(note.getId(), note.getIsFavourite());
+                database.close();
                 return false;
             }
         });
@@ -183,8 +196,96 @@ public class NoteActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        menuItemBackgroundColor.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Dialog dialogColorPalette = new Dialog(NoteActivity.this);
+                dialogColorPalette.setContentView(R.layout.layout_dialog_color_palette);
+
+                ImageView imageViewBackgroundGray = dialogColorPalette.findViewById((R.id.imageViewBackgroundGray));
+                ImageView imageViewBackgroundBrown = dialogColorPalette.findViewById(R.id.imageViewBackgroundBrown);
+                ImageView imageViewBackgroundBlue = dialogColorPalette.findViewById(R.id.imageViewBackgroundBlue);
+                ImageView imageViewBackgroundCyan = dialogColorPalette.findViewById(R.id.imageViewBackgroundCyan);
+                ImageView imageViewBackgroundGreen = dialogColorPalette.findViewById(R.id.imageViewBackgroundGreen);
+                ImageView imageViewBackgroundRed = dialogColorPalette.findViewById(R.id.imageViewBackgroundRed);
+                ImageView imageViewBackgroundMagenta = dialogColorPalette.findViewById(R.id.imageViewBackgroundMagenta);
+                ImageView imageViewBackgroundYellow = dialogColorPalette.findViewById(R.id.imageViewBackgroundYellow);
+                ImageView imageViewBackgroundOrange = dialogColorPalette.findViewById(R.id.imageViewBackgroundOrange);
+                ImageView imageViewBackgroundWhite = dialogColorPalette.findViewById(R.id.imageViewBackgroundWhite);
+                ImageView imageViewBackgroundDarkGreen = dialogColorPalette.findViewById(R.id.imageViewBackgroundDarkGreen);
+                ImageView imageViewBackgroundPurple = dialogColorPalette.findViewById(R.id.imageViewBackgroundPurple);
+
+                imageViewBackgroundGray.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(Color.GRAY);
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundBrown.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(getResources().getColor(R.color.brown));
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundBlue.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(Color.BLUE);
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundCyan.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(Color.CYAN);
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundGreen.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(Color.GREEN);
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundRed.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(Color.RED);
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundMagenta.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(Color.MAGENTA);
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundYellow.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(Color.YELLOW);
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundOrange.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(getResources().getColor(R.color.orange));
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundWhite.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(Color.WHITE);
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundPurple.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(getResources().getColor(R.color.purple));
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+                imageViewBackgroundDarkGreen.setOnClickListener(v -> {
+                    note.setColorBackgroundValue(getResources().getColor(R.color.dark_green));
+                    dialogColorPalette.hide();
+                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                });
+
+                dialogColorPalette.show();
+                return false;
+            }
+        });
+
+
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -257,14 +358,45 @@ public class NoteActivity extends AppCompatActivity {
                 spannableString.setSpan(new RelativeSizeSpan(2f), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         });
-
-
     }
 
     private void coloriseStar() {
         if(note.getIsFavourite())
             menuItemStar.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.yellow))); //setting the color of the item
         else menuItemStar.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
+    }
+
+    private void applyBackgroundColor() {
+        int colorValue = Color.WHITE;
+/*        switch (selectedColor) {
+            case "gray":
+                colorValue = Color.GRAY;
+                break;
+            case "blue":
+                colorValue = Color.BLUE;
+                break;
+            case "cyan":
+                colorValue = Color.CYAN;
+                break;
+            case "green":
+                colorValue = Color.GREEN;
+                break;
+            case "red":
+                colorValue = Color.RED;
+                break;
+            case "magenta":
+                colorValue = Color.MAGENTA;
+                break;
+            case "yellow":
+                colorValue = Color.YELLOW;
+                break;
+            default:    //a default color of a note is white
+                colorValue = Color.WHITE;
+                break;
+        }*/
+
+        note.setColorBackgroundValue(colorValue);
+        nestedScrollView.setBackgroundColor(colorValue);
     }
 
     private void showButtonsForAdvancedMode() {
@@ -283,5 +415,17 @@ public class NoteActivity extends AppCompatActivity {
     public void HideAdvancedButtonsForAdvancedMode() {
             toolbarTextTools.setVisibility(View.GONE);
             toolbarAlignText.setVisibility(View.GONE);
+    }
+
+    public FragmentRefreshListener getFragmentRefreshListener() {
+        return fragmentRefreshListener;
+    }
+
+    public void setFragmentRefreshListener(FragmentRefreshListener fragmentRefreshListener) {
+        this.fragmentRefreshListener = fragmentRefreshListener;
+    }
+
+    public interface FragmentRefreshListener{
+        void onRefresh();
     }
 }

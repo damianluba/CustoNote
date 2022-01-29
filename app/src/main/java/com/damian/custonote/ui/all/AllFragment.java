@@ -15,12 +15,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.damian.custonote.ui.NoteActivity;
 import com.damian.custonote.R;
 import com.damian.custonote.data.adapter.NotesAdapter;
 import com.damian.custonote.data.database.DatabaseHelper;
 import com.damian.custonote.data.model.Note;
 import com.damian.custonote.databinding.FragmentAllBinding;
+import com.damian.custonote.ui.NoteActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -38,8 +38,6 @@ public class AllFragment extends Fragment{
         allViewModel = new ViewModelProvider(this).get(AllViewModel.class);
         binding = FragmentAllBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        recyclerViewAllNotes = root.findViewById(R.id.recyclerViewAllNotes); //R chosen from com.damian.custonote.R
-        recyclerViewAllNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         fabAddNote = getActivity().findViewById(R.id.fabAdd);
         fabAddNote.setImageResource(R.drawable.ic_add_note);
@@ -50,6 +48,28 @@ public class AllFragment extends Fragment{
                 startActivity(new Intent(getActivity(), NoteActivity.class));
             }
         });
+
+        loadNotes();
+        return root;
+    }
+
+
+    @Override
+    public void onResume() {
+        loadNotes();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    public void loadNotes() {
+        View root = binding.getRoot();
+        recyclerViewAllNotes = root.findViewById(R.id.recyclerViewAllNotes); //R chosen from com.damian.custonote.R
+        recyclerViewAllNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         DatabaseHelper databaseHelper = new DatabaseHelper(getActivity().getApplicationContext());
         listNotes = databaseHelper.getNotes();
@@ -70,16 +90,7 @@ public class AllFragment extends Fragment{
                 Toast.makeText(getContext().getApplicationContext(), "longer press", Toast.LENGTH_LONG).show();
             }
         });
-
-        recyclerViewAllNotes.setAdapter(notesAdapter);
-
         //the methods for clicks in a note content are defined in NotesAdapter
-        return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+        recyclerViewAllNotes.setAdapter(notesAdapter);
     }
 }

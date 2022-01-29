@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="choose a color of background" />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:rowCount="3"
+        android:useDefaultMargins="true">
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundPurple"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/purple"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundBrown"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/brown"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundRed"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/red"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundMagenta"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/magenta"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundGray"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/gray"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundOrange"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/orange"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundWhite"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundDarkGreen"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/dark_green"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundYellow"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/yellow"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundCyan"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/cyan"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundBlue"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/blue"
+            android:foregroundTintMode="multiply" />
+
+        <ImageView
+            android:id="@+id/imageViewBackgroundGreen"
+            android:layout_width="@dimen/customizing_item_dimen"
+            android:layout_height="@dimen/customizing_item_dimen"
+            android:background="@color/transparent"
+            android:foreground="@drawable/circle"
+            android:foregroundTint="@color/green"
+            android:foregroundTintMode="multiply" />
+
+    </GridLayout>
+
+</RelativeLayout>

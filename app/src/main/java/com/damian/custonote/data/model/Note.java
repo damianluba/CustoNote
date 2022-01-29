@@ -8,6 +8,7 @@ public class Note implements Serializable {
     String title, content, st;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Boolean isBasicMode, isSynchronised, isFavourite;
+    int colorBackgroundValue;
 
     public Note(int ID, String title, String content/*, LocalDateTime timestampNoteCreated*/, Boolean isBasicMode, Boolean isFavourite) {
         this.ID = ID;
@@ -18,14 +19,23 @@ public class Note implements Serializable {
         this.isFavourite = isFavourite;
     }
 
-    public Note(String title, String content, Boolean isBasicMode, Boolean isFavourite, Boolean isSynchronised, LocalDateTime timestampNoteCreated, LocalDateTime timestampNoteModified) {
+    public Note(String title, String content, Boolean isBasicMode, Boolean isFavourite, Boolean isSynchronised, LocalDateTime timestampNoteCreated, LocalDateTime timestampNoteModified, int backgroundColorValue) {
         this.title = title;
         this.content = content;
         this.isBasicMode = isBasicMode;
-        this.isFavourite = isFavourite;
-        this.isSynchronised = isSynchronised;
         this.timestampNoteCreated = timestampNoteCreated;
         this.timestampNoteModified = timestampNoteModified;
+        this.isFavourite = isFavourite;
+        this.isSynchronised = isSynchronised;
+        this.colorBackgroundValue = backgroundColorValue;
+    }
+
+    public Note(String title, String content, Boolean isBasicMode, LocalDateTime timestampNoteCreated, LocalDateTime timestampNoteModified, int backgroundColorValue) {
+        this.title = title;
+        this.content = content;
+        this.isBasicMode = isBasicMode;
+        this.timestampNoteModified = timestampNoteModified;
+        this.colorBackgroundValue = backgroundColorValue;
     }
 
     public Note(int ID) {
@@ -124,7 +134,12 @@ public class Note implements Serializable {
         this.isSynchronised = isSynchronised;
     }
 
-    public enum Color {
-        Red, Blue, Yellow
+    public int getColorBackgroundValue() {
+        return colorBackgroundValue;
     }
+
+    public void setColorBackgroundValue(int colorBackgroundValue) {
+        this.colorBackgroundValue = colorBackgroundValue;
+    }
+
 }

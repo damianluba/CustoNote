@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    //these variables are only words for building SQL commands
     private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_TABLE = "DATABASE_CUSTONOTE";
     public static final String COL_ID = "ID";
@@ -27,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_IS_FAVOURITE = "IS_FAVOURITE";
     public static final String COL_IS_SYNCHRONISED = "IS_SYNCHRONISED";
     public static final String FORMAT_DATE_TIME = "d MMM YYYY, HH:mm";
+    public static final String COL_BACKGROUND_COLOR = "BACKGROUND_COLOR";
 
     //methods for notes managing
     public DatabaseHelper(@Nullable Context context) {
@@ -43,7 +46,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_TIMESTAMP_CREATED + " TEXT," +
                 COL_TIMESTAMP_MODIFIED + " TEXT," +
                 COL_IS_FAVOURITE + " TEXT," +
-                COL_IS_SYNCHRONISED + " TEXT)");
+                COL_IS_SYNCHRONISED + " TEXT," +
+                COL_BACKGROUND_COLOR + " TEXT)");
     }
 
     @Override
@@ -57,24 +61,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_TITLE, note.getTitle());
         contentValues.put(COL_CONTENT, note.getContent());
-        note.setIsBasicMode(true);//TODO
-        note.setIsFavourite(false);//TODO
         note.setIsSynchronised(false);//TODO
+//        contentValues.put(COL_IS_SYNCHRONISED, note.getIsSynchronised());
+        contentValues.put(COL_BACKGROUND_COLOR, note.getColorBackgroundValue());
+        /*note.setIsBasicMode(true);
+        note.setIsFavourite(false);*/
+
         contentValues.put(COL_IS_BASIC_MODE, (note.getIsBasicMode()?1:0));
         contentValues.put(COL_TIMESTAMP_CREATED,  LocalDateTime.now().toString());
-        contentValues.put(COL_IS_FAVOURITE, (note.getIsFavourite()?1:0));
-        contentValues.put(COL_IS_SYNCHRONISED, (note.getIsSynchronised()?1:0));
+//        contentValues.put(COL_IS_FAVOURITE, (note.getIsFavourite()?1:0));
+//        contentValues.put(COL_IS_SYNCHRONISED, (note.getIsSynchronised()?1:0));
+        contentValues.put(COL_BACKGROUND_COLOR, note.getColorBackgroundValue());
 
         database.insert(DATABASE_TABLE, null, contentValues);
         database.close();
     }
 
-    public void updateNote(int ID, String newContent, String newTitle) {
+    public void markOrUnmarkNoteAsFavourite(int ID, Boolean isFavourite) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues updatedValue = new ContentValues();
+        updatedValue.put(COL_IS_FAVOURITE, isFavourite);
+        database.update(DATABASE_TABLE, updatedValue,  COL_ID + " = " + ID, null);
+        database.close();
+    }
+
+    public void updateNote(int ID, String newContent, String newTitle, Boolean newIsBasicMode, int newBackgroundColor) {
         SQLiteDatabase database = this.getWritableDatabase();
        ContentValues updatedValues = new ContentValues();
         updatedValues.put(COL_TITLE, newTitle);
         updatedValues.put(COL_CONTENT, newContent);
         updatedValues.put(COL_TIMESTAMP_MODIFIED,  LocalDateTime.now().toString());
+        //COL_IS_FAVOURITE isn't updated here because it's updated in markOrUnmarkNoteAsFavourite()
+        updatedValues.put(COL_IS_BASIC_MODE,  newIsBasicMode);
+        updatedValues.put(COL_BACKGROUND_COLOR, newBackgroundColor);
 
         database.update(DATABASE_TABLE, updatedValues,  COL_ID + " = " + ID, null);
         database.close();
@@ -89,7 +108,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getData() {
         SQLiteDatabase database = this.getReadableDatabase();
-        Cursor cursor = database.rawQuery("SELECT*FROM " + DATABASE_TABLE, null); //
+        Cursor cursor = database.rawQuery("SELECT*FROM " + DATABASE_TABLE, null);
+        database.close();
         return cursor;
     }
 
@@ -141,6 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 note.setIsFavourite(cursor.getInt(6)==1);
                 note.setIsSynchronised(cursor.getInt(7)==1);
+                note.setColorBackgroundValue(cursor.getInt(8));
 
                 foundNotes.add(note);
             } while(cursor.moveToNext());
@@ -166,6 +187,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     note.setTimestampNoteModified(LocalDateTime.parse(cursor.getString(5)));
                 note.setIsFavourite(cursor.getInt(6)==1);
                 note.setIsSynchronised(cursor.getInt(7)==1);
+                note.setColorBackgroundValue(cursor.getInt(8));
 
                 allNotes.add(note);
             } while(cursor.moveToNext());
