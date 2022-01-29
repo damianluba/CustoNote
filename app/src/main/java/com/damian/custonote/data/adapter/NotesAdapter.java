@@ -8,10 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.damian.custonote.R;
 import com.damian.custonote.data.model.Note;
+import com.mpt.android.stv.SpannableTextView;
 
 import java.util.List;
 
@@ -43,9 +45,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotesPositionViewHolder holder, int position) { //lists all notes
+    public void onBindViewHolder(@NonNull NotesPositionViewHolder holder, int position) { //lists all notes with all their parameters
         holder.textViewTitle.setText(listNotes.get(position).getTitle());
         holder.textViewContent.setText(listNotes.get(position).getContent());
+        holder.noteBackground.setBackgroundColor(listNotes.get(position).getColorBackgroundValue());
+
+        if(listNotes.get(position).getIsFavourite())
+            holder.imageViewIsFavourite.setImageResource(R.drawable.ic_star);
+        else holder.imageViewIsFavourite.setImageResource(R.drawable.ic_empty_star);
 
         holder.textViewContent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,15 +67,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     }
 
     public class NotesPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        SpannableTextView spannableTextView;
         TextView textViewTitle, textViewContent;
-        ImageView imageViewMainImageOfNote;
+        ImageView imageViewMainImageOfNote, imageViewIsFavourite;
         NotesAdapter notesAdapter;
+        ConstraintLayout noteBackground;
 
         public NotesPositionViewHolder(@NonNull View itemView, @NonNull NotesAdapter notesAdapter) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             textViewContent = itemView.findViewById(R.id.textViewContent);
+            imageViewIsFavourite = itemView.findViewById(R.id.imageViewIsFavourite);
+            noteBackground = itemView.findViewById(R.id.noteBackground);
             this.notesAdapter = notesAdapter;
+
 //            imageViewMainImageOfNote = itemView.findViewById(R.id.imageViewMainImageOfNote);
 
             itemView.setOnClickListener(this);

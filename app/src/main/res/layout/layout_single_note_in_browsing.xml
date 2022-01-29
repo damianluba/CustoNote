@@ -4,16 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/note_border">
+    android:layout_marginHorizontal="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/note_border"
+    android:backgroundTint="@color/dark_teal"
+    android:foregroundGravity="bottom"
+    android:foregroundTint="@color/transparent">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/note_border">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/noteBackground"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/magenta">
 
             <CheckBox
                 android:id="@+id/checkBoxCheckedNote"
@@ -27,13 +33,13 @@
 
             <ImageView
                 android:id="@+id/imageViewIsFavourite"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginRight="@dimen/note_margin"
+                android:background="@drawable/ic_empty_star"
                 app:layout_constraintBottom_toBottomOf="@+id/textViewTitle"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textViewTitle"
-                app:srcCompat="@drawable/ic_empty_star" />
+                app:layout_constraintTop_toTopOf="@+id/textViewTitle" />
 
             <ImageView
                 android:id="@+id/imageViewMainImageOfNote"

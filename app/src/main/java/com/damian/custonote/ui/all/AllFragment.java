@@ -49,14 +49,14 @@ public class AllFragment extends Fragment{
             }
         });
 
-        loadNotes();
+        showNotesInUi();
         return root;
     }
 
 
     @Override
     public void onResume() {
-        loadNotes();
+        showNotesInUi();
         super.onResume();
     }
 
@@ -66,7 +66,7 @@ public class AllFragment extends Fragment{
         binding = null;
     }
 
-    public void loadNotes() {
+    public void showNotesInUi() {
         View root = binding.getRoot();
         recyclerViewAllNotes = root.findViewById(R.id.recyclerViewAllNotes); //R chosen from com.damian.custonote.R
         recyclerViewAllNotes.setLayoutManager(new LinearLayoutManager(getContext()));

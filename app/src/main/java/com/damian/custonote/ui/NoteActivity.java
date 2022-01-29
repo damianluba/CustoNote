@@ -3,6 +3,7 @@ package com.damian.custonote.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -59,7 +60,7 @@ public class NoteActivity extends AppCompatActivity {
     SpannableString spannableString;
     Typeface typeface;
     Toolbar toolbarTextTools;
-    NestedScrollView nestedScrollView;
+    NestedScrollView noteBackground;
     private FragmentRefreshListener fragmentRefreshListener;
 
     @Override
@@ -89,7 +90,8 @@ public class NoteActivity extends AppCompatActivity {
         textViewTimestamp = findViewById(R.id.textViewTimestamp);
         toolbarTextTools = findViewById(R.id.toolbarTextTools);
         toolbarAlignText = findViewById(R.id.toolbarAlignText);
-        nestedScrollView = findViewById(R.id.nestedScrollView);
+        noteBackground = findViewById(R.id.nestedScrollView);
+
 
         //------------------------------------------------RECEIVING DATA FROM PREVIOUS ACTIVITY and OPENING THE NOTE ----------------------------------------------------------
         intent = getIntent();
@@ -104,7 +106,7 @@ public class NoteActivity extends AppCompatActivity {
 
             editTextTitle_contentNote.setText(note.getTitle());
             editTextContent_contentNote.setText(note.getContent());
-            nestedScrollView.setBackgroundColor(note.getColorBackgroundValue()); //make a background
+            noteBackground.setBackgroundColor(note.getColorBackgroundValue()); //make a background
 
             textViewTimestamp.setText("Created: " + note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
             if(note.getTimestampNoteModified() != null) //if a note wasn't modified
@@ -161,8 +163,6 @@ public class NoteActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
                 database.close();
-
-                updateMainUi();
                 return false;
             }
         });
@@ -219,62 +219,62 @@ public class NoteActivity extends AppCompatActivity {
                 imageViewBackgroundGray.setOnClickListener(v -> {
                     note.setColorBackgroundValue(Color.GRAY);
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundBrown.setOnClickListener(v -> {
                     note.setColorBackgroundValue(getResources().getColor(R.color.brown));
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundBlue.setOnClickListener(v -> {
                     note.setColorBackgroundValue(Color.BLUE);
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundCyan.setOnClickListener(v -> {
                     note.setColorBackgroundValue(Color.CYAN);
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundGreen.setOnClickListener(v -> {
                     note.setColorBackgroundValue(Color.GREEN);
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundRed.setOnClickListener(v -> {
                     note.setColorBackgroundValue(Color.RED);
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundMagenta.setOnClickListener(v -> {
                     note.setColorBackgroundValue(Color.MAGENTA);
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundYellow.setOnClickListener(v -> {
                     note.setColorBackgroundValue(Color.YELLOW);
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundOrange.setOnClickListener(v -> {
                     note.setColorBackgroundValue(getResources().getColor(R.color.orange));
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundWhite.setOnClickListener(v -> {
                     note.setColorBackgroundValue(Color.WHITE);
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundPurple.setOnClickListener(v -> {
                     note.setColorBackgroundValue(getResources().getColor(R.color.purple));
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
                 imageViewBackgroundDarkGreen.setOnClickListener(v -> {
                     note.setColorBackgroundValue(getResources().getColor(R.color.dark_green));
                     dialogColorPalette.hide();
-                    nestedScrollView.setBackgroundColor(note.getColorBackgroundValue());
+                    noteBackground.setBackgroundColor(note.getColorBackgroundValue());
                 });
 
                 dialogColorPalette.show();
@@ -311,16 +311,13 @@ public class NoteActivity extends AppCompatActivity {
         imageViewBold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spannableString.setSpan(new StyleSpan(Typeface.BOLD),0,note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), 0, note.getContent().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                spannableString.setSpan(new UnderlineSpan(), 0, note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                spannableString.setSpan(new StyleSpan(Typeface.BOLD),0, note.getContent().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                 spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             }
         });
 
-        ImageView imageViewCursive = findViewById(R.id.imageViewCursive);
-        imageViewCursive.setOnClickListener(new View.OnClickListener() {
+        ImageView imageViewItalic = findViewById(R.id.imageViewItalic);
+        imageViewItalic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 spannableString.setSpan(new StyleSpan(Typeface.ITALIC) , editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
@@ -355,20 +352,20 @@ public class NoteActivity extends AppCompatActivity {
         buttonTextColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spannableString.setSpan(new RelativeSizeSpan(2f), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), 0, note.getContent().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             }
         });
     }
 
     private void coloriseStar() {
         if(note.getIsFavourite())
-            menuItemStar.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.yellow))); //setting the color of the item
-        else menuItemStar.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
+            menuItemStar.setIconTintList(ColorStateList.valueOf(Color.YELLOW)); //setting the color of the item
+        else menuItemStar.setIconTintList(ColorStateList.valueOf(Color.TRANSPARENT)); //setting the color of the item
     }
 
     private void applyBackgroundColor() {
         int colorValue = Color.WHITE;
-/*        switch (selectedColor) {
+        {/*        switch (selectedColor) {
             case "gray":
                 colorValue = Color.GRAY;
                 break;
@@ -393,19 +390,19 @@ public class NoteActivity extends AppCompatActivity {
             default:    //a default color of a note is white
                 colorValue = Color.WHITE;
                 break;
-        }*/
+        }*/}
 
         note.setColorBackgroundValue(colorValue);
-        nestedScrollView.setBackgroundColor(colorValue);
+        noteBackground.setBackgroundColor(colorValue);
     }
 
     private void showButtonsForAdvancedMode() {
         if(note.getIsBasicMode()) {
-            menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.white))); //setting the color of the item
+            menuItemSwitchMode.setIconTintList(ColorStateList.valueOf(Color.WHITE)); //setting the color of the item
             toolbarAlignText.setVisibility(View.GONE);
             toolbarTextTools.setVisibility(View.GONE);
         } else {
-            menuItemSwitchMode.setIconTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.blue))); //setting the color of the item
+            menuItemSwitchMode.setIconTintList(ColorStateList.valueOf(Color.BLUE)); //setting the color of the item
             toolbarTextTools.setVisibility(View.VISIBLE);
             toolbarAlignText.setVisibility(View.VISIBLE);
             configureButtonsForAdvancedMode();

@@ -11,8 +11,10 @@
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_add_note.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_add_note_color.xml" value="0.1796875" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.19739583333333333" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_empty_star.xml" value="0.23385416666666667" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_format_align_center.xml" value="0.10185185185185185" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_icon.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_italic.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_label.xml" value="0.17864583333333334" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_letter_a_foreground.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_pencil.xml" value="0.30104166666666665" />
@@ -20,7 +22,10 @@
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_save.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_search.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_share.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_square.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_star.xml" value="0.17864583333333334" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_twotone_star_24.xml" value="0.23385416666666667" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_underline.xml" value="1.80625" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/ic_user.xml" value="0.19739583333333333" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/note_border.xml" value="0.27870370370370373" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/drawable/shape_of_color.xml" value="0.27870370370370373" />
@@ -29,7 +34,7 @@
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout-w936dp/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_login.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_note.xml" value="0.33" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_note.xml" value="0.3300370828182942" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_search.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_searchable.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/activity_splash.xml" value="0.28489583333333335" />
@@ -54,7 +59,7 @@
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_align.xml" value="0.75" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_dialog_color_palette.xml" value="0.24479166666666666" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_single_note.xml" value="0.28489583333333335" />
-        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_single_note_in_browsing.xml" value="0.25" />
+        <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/layout_single_note_in_browsing.xml" value="0.5" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/switch_item.xml" value="0.1796875" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/layout/test_fragment.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/Android/CustoNote/app/src/main/res/menu/action_bar_main_activity.xml" value="0.22" />
