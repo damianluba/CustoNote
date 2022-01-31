@@ -41,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "" +
                 "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COL_TITLE + " TEXT," +
-                COL_CONTENT + " TEXT," +
+                COL_CONTENT + " BLOB," +
                 COL_IS_BASIC_MODE + " TEXT," +
                 COL_TIMESTAMP_CREATED + " TEXT," +
                 COL_TIMESTAMP_MODIFIED + " TEXT," +
@@ -151,23 +151,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             foundNotes = new ArrayList<Note>();
             do {
                 Note note = new Note();
-                note.setID(cursor.getInt(0));
-                note.setTitle(cursor.getString(1));
-                note.setContent(cursor.getString(2));
-                note.setIsBasicMode(cursor.getInt(3)==1);
-                note.setTimestampNoteCreated(LocalDateTime.parse(cursor.getString(4)));
-                if(cursor.getString(5) != null) {
-                    note.setTimestampNoteModified(LocalDateTime.parse(cursor.getString(5)));
-                }
-                note.setIsFavourite(cursor.getInt(6)==1);
-                note.setIsSynchronised(cursor.getInt(7)==1);
-                note.setColorBackgroundValue(cursor.getInt(8));
+                assignColumnsToNoteAttributes(cursor, note);
 
                 foundNotes.add(note);
             } while(cursor.moveToNext());
         }
         database.close();
         return foundNotes;
+    }
+
+    private void assignColumnsToNoteAttributes(Cursor cursor, Note note) {
+        note.setID(cursor.getInt(0));
+        note.setTitle(cursor.getString(1));
+        note.setContent(cursor.getString(2));
+        note.setIsBasicMode(cursor.getInt(3) == 1);
+        note.setTimestampNoteCreated(LocalDateTime.parse(cursor.getString(4)));
+        if(cursor.getString(5) != null) {
+            note.setTimestampNoteModified(LocalDateTime.parse(cursor.getString(5)));
+        }
+        note.setIsFavourite(cursor.getInt(6) == 1);
+        note.setIsSynchronised(cursor.getInt(7) == 1);
+        note.setColorBackgroundValue(cursor.getInt(8));
     }
 
     public List<Note> getNotes() {
@@ -178,16 +182,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()) {
             do {
                 Note note = new Note();
-                note.setID(cursor.getInt(0));
-                note.setTitle(cursor.getString(1));
-                note.setContent(cursor.getString(2));
-                note.setIsBasicMode(cursor.getInt(3)==1);
-                note.setTimestampNoteCreated(LocalDateTime.parse(cursor.getString(4)));
-                if(cursor.getString(5) != null)
-                    note.setTimestampNoteModified(LocalDateTime.parse(cursor.getString(5)));
-                note.setIsFavourite(cursor.getInt(6)==1);
-                note.setIsSynchronised(cursor.getInt(7)==1);
-                note.setColorBackgroundValue(cursor.getInt(8));
+                assignColumnsToNoteAttributes(cursor, note);
 
                 allNotes.add(note);
             } while(cursor.moveToNext());
@@ -197,4 +192,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // -of-0-in-android
         return allNotes;
     }
+
+
 }

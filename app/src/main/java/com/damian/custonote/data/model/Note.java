@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 
 public class Note implements Serializable {
     int ID, Photo;
-    String title, content, st;
+    String title;
+    String content;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Boolean isBasicMode, isSynchronised, isFavourite;
     int colorBackgroundValue;

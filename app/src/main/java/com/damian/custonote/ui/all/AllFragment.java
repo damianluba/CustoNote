@@ -83,6 +83,7 @@ public class AllFragment extends Fragment{
                 Note note = listNotes.get(position);
                 intent.putExtra("bundleNote", note);
                 startActivity(intent);
+
             }
 
             @Override

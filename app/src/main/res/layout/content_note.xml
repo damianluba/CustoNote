@@ -49,6 +49,7 @@
                 android:ellipsize="end"
                 android:focusable="true"
                 android:hint="Here write your ideas and notes"
+                android:inputType="textPersonName"
                 android:textAlignment="inherit"
                 android:textAllCaps="false"
                 android:textSize="20sp"
