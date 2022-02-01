@@ -77,15 +77,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.close();
     }
 
-    public void markOrUnmarkNoteAsFavourite(int ID, Boolean isFavourite) {
-        SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues updatedValue = new ContentValues();
-        updatedValue.put(COL_IS_FAVOURITE, isFavourite);
-        database.update(DATABASE_TABLE, updatedValue,  COL_ID + " = " + ID, null);
-        database.close();
-    }
-
-    public void updateNote(int ID, String newContent, String newTitle, Boolean newIsBasicMode, int newBackgroundColor) {
+    public void updateNote(int ID, String newTitle, String newContent, Boolean newIsBasicMode, int newBackgroundColor) {
         SQLiteDatabase database = this.getWritableDatabase();
        ContentValues updatedValues = new ContentValues();
         updatedValues.put(COL_TITLE, newTitle);
@@ -158,6 +150,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         database.close();
         return foundNotes;
+    }
+
+    public void markOrUnmarkNoteAsFavourite(int ID, Boolean isFavourite) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues updatedValue = new ContentValues();
+        updatedValue.put(COL_IS_FAVOURITE, isFavourite);
+        database.update(DATABASE_TABLE, updatedValue,  COL_ID + " = " + ID, null);
+        database.close();
     }
 
     private void assignColumnsToNoteAttributes(Cursor cursor, Note note) {

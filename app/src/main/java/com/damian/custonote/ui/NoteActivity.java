@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.AlignmentSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -26,8 +27,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.text.HtmlCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -50,7 +53,7 @@ public class NoteActivity extends AppCompatActivity {
     private MenuItem menuItemSave, menuItemStar, menuItemDelete, menuItemSwitchMode, menuItemBackgroundColor;
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
-    private EditText editTextTitle_contentNote,  editTextContent_contentNote;
+    private EditText editTextTitle,  editTextContent;
     private Toolbar toolbarAlignText;
     private LocalDateTime timestampNoteCreated, timestampNoteModified;
     private Context context;
@@ -80,8 +83,8 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
-        editTextTitle_contentNote = findViewById(R.id.editTextTitle_contentNote);
-        editTextContent_contentNote = findViewById(R.id.editTextContent_contentNote);
+        editTextTitle = findViewById(R.id.editTextTitle_contentNote);
+        editTextContent = findViewById(R.id.editTextContent_contentNote);
         textViewTimestamp = findViewById(R.id.textViewTimestamp);
         toolbarTextTools = findViewById(R.id.toolbarTextTools);
         toolbarAlignText = findViewById(R.id.toolbarAlignText);
@@ -107,7 +110,7 @@ public class NoteActivity extends AppCompatActivity {
 
         //started buttons configuration
         coloriseStar();
-        setNoteMode();
+        setUpNoteMode();
 
         //----------------------------------------------------------SAVING-------------------------------------------------------------------------------------
         menuItemSave.setOnMenuItemClickListener(menuItem -> {
@@ -118,7 +121,6 @@ public class NoteActivity extends AppCompatActivity {
             if(note.getId() == 0)
                 saveNoteNotModifiedBefore();
              else updateNote();
-
 
             Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG).show();
             database.close();
@@ -141,8 +143,16 @@ public class NoteActivity extends AppCompatActivity {
         });
 
         menuItemSwitchMode.setOnMenuItemClickListener(menuItem -> {
+//            switchMode(note);
+            if(note.getIsBasicMode())
+                configureButtonsForAdvancedMode();
+            else {  //switch to basic mode
+                AlertDialog alertDialogClearFormatting;
+                clearFormatting(note.getContent());
+
+            }
             note.setIsBasicMode(!note.getIsBasicMode());
-            setNoteMode();
+            setUpNoteMode();
             return false;
         });
 
@@ -168,7 +178,8 @@ public class NoteActivity extends AppCompatActivity {
     private void updateNote() {
         databaseHelper = new DatabaseHelper(context);
         database = databaseHelper.getWritableDatabase();
-        databaseHelper.updateNote(note.getId(), editTextContent_contentNote.getText().toString(), editTextTitle_contentNote.getText().toString(), note.getIsFavourite(), note.getColorBackgroundValue());
+        String scriptedNoteContent = getScriptedContent(editTextContent.getText());
+        databaseHelper.updateNote(note.getId(), editTextTitle.getText().toString(), getScriptedContent(editTextContent.getText()), note.getIsFavourite(), note.getColorBackgroundValue());
 
         textViewTimestamp.setText(
                         "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
@@ -179,8 +190,10 @@ public class NoteActivity extends AppCompatActivity {
         textViewTimestamp.setText("Created: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)));
 
         //here attributes isFavourite and isBasicMode aren't saved -  as only a user clicks marks a note as favourite, makes changes in note data
-        note.setTitle(editTextTitle_contentNote.getText().toString());
-        note.setContent(editTextContent_contentNote.getText().toString());
+        note.setTitle(editTextTitle.getText().toString());
+//        String formattedContent = HtmlCompat.toHtml(editTextContent.getText(), HtmlCompat.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+//        note.setContent(formattedContent);
+        setScriptedContent(editTextContent.getText());
 
         databaseHelper = new DatabaseHelper(context);
         database = databaseHelper.getWritableDatabase();
@@ -189,8 +202,8 @@ public class NoteActivity extends AppCompatActivity {
 
     public void showSystemKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        editTextContent_contentNote.requestFocus();
-        imm.showSoftInput(editTextContent_contentNote, InputMethodManager.SHOW_IMPLICIT);
+        editTextContent.requestFocus();
+        imm.showSoftInput(editTextContent, InputMethodManager.SHOW_IMPLICIT);
     }
 
     private void configureNewNote() {
@@ -207,8 +220,9 @@ public class NoteActivity extends AppCompatActivity {
             HideAdvancedButtonsForAdvancedMode();
         else configureButtonsForAdvancedMode();
 
-        editTextTitle_contentNote.setText(note.getTitle());
-        editTextContent_contentNote.setText(note.getContent());
+        editTextTitle.setText(note.getTitle());
+        editTextContent.setText(HtmlCompat.fromHtml(note.getContent() , HtmlCompat.FROM_HTML_MODE_LEGACY));
+        note.displayReadableContent(note.getContent());
         noteBackground.setBackgroundColor(note.getColorBackgroundValue()); //make a background
 
         textViewTimestamp.setText("Created: " + note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
@@ -223,10 +237,10 @@ public class NoteActivity extends AppCompatActivity {
         imageViewBold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SpannableStringBuilder spannableString = new SpannableStringBuilder(editTextContent_contentNote.getText());
-                spannableString.setSpan(new StyleSpan(Typeface.BOLD),editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                SpannableStringBuilder spannableString = new SpannableStringBuilder(editTextContent.getText());
+                spannableString.setSpan(new StyleSpan(Typeface.BOLD), editTextContent.getSelectionStart(), editTextContent.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 //                spannableString.setSpan(new BackgroundColorSpan(Color.GREEN), 0, note.getContent().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                editTextContent_contentNote.setText(spannableString);
+                editTextContent.setText(spannableString);
             }
         });
 
@@ -234,9 +248,9 @@ public class NoteActivity extends AppCompatActivity {
         imageViewItalic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Spannable spannableString = new SpannableStringBuilder(editTextContent_contentNote.getText());
-                spannableString.setSpan(new StyleSpan(Typeface.ITALIC) , editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                editTextContent_contentNote.setText(spannableString);
+                Spannable spannableString = new SpannableStringBuilder(editTextContent.getText());
+                spannableString.setSpan(new StyleSpan(Typeface.ITALIC) , editTextContent.getSelectionStart(), editTextContent.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                editTextContent.setText(spannableString);
             }
         });
 
@@ -244,9 +258,9 @@ public class NoteActivity extends AppCompatActivity {
         imageViewUnderline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Spannable spannableString = new SpannableStringBuilder(editTextContent_contentNote.getText());
-                spannableString.setSpan(new UnderlineSpan(), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                editTextContent_contentNote.setText(spannableString);
+                Spannable spannableString = new SpannableStringBuilder(editTextContent.getText());
+                spannableString.setSpan(new UnderlineSpan(), editTextContent.getSelectionStart(), editTextContent.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                editTextContent.setText(spannableString);
             }
         });
 
@@ -254,9 +268,9 @@ public class NoteActivity extends AppCompatActivity {
         imageViewAlign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Spannable spannableString = new SpannableStringBuilder(editTextContent_contentNote.getText());
-                spannableString.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                editTextContent_contentNote.setText(spannableString);
+                Spannable spannableString = new SpannableStringBuilder(editTextContent.getText());
+                spannableString.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), editTextContent.getSelectionStart(), editTextContent.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                editTextContent.setText(spannableString);
             }
         });
 
@@ -264,9 +278,9 @@ public class NoteActivity extends AppCompatActivity {
         buttonFont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Spannable spannableString = new SpannableStringBuilder(editTextContent_contentNote.getText());
-                spannableString.setSpan(new RelativeSizeSpan(2f), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                editTextContent_contentNote.setText(spannableString);
+                Spannable spannableString = new SpannableStringBuilder(editTextContent.getText());
+                spannableString.setSpan(new RelativeSizeSpan(2f), editTextContent.getSelectionStart(), editTextContent.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                editTextContent.setText(spannableString);
             }
         });
 
@@ -274,9 +288,9 @@ public class NoteActivity extends AppCompatActivity {
         buttonTextColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Spannable spannableString = new SpannableStringBuilder(editTextContent_contentNote.getText());
-                spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), editTextContent_contentNote.getSelectionStart(), editTextContent_contentNote.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                editTextContent_contentNote.setText(spannableString);
+                Spannable spannableString = new SpannableStringBuilder(editTextContent.getText());
+                spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), editTextContent.getSelectionStart(), editTextContent.getSelectionEnd(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                editTextContent.setText(spannableString);
             }
         });
     }
@@ -320,18 +334,61 @@ public class NoteActivity extends AppCompatActivity {
         noteBackground.setBackgroundColor(colorValue);
     }
 
-    private void setNoteMode() {
+    private void setUpNoteMode() {
         if(note.getIsBasicMode()) {
+            //TURN OFF ADVANCED MODE
             menuItemSwitchMode.setIconTintList(ColorStateList.valueOf(Color.WHITE)); //setting the color of the item
             toolbarAlignText.setVisibility(View.GONE);
             toolbarTextTools.setVisibility(View.GONE);
         } else {
+            //TURN ON ADVANCED MODE
             menuItemSwitchMode.setIconTintList(ColorStateList.valueOf(Color.BLUE)); //setting the color of the item
+
             toolbarTextTools.setVisibility(View.VISIBLE);
             toolbarAlignText.setVisibility(View.VISIBLE);
             configureButtonsForAdvancedMode();
         }
     }
+
+    public void setScriptedContent(Spanned spanned) {
+        String scriptedContent = HtmlCompat.toHtml(spanned, HtmlCompat.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+        note.setContent(scriptedContent);
+    }
+
+    public String getScriptedContent(Spanned spanned) {
+        return HtmlCompat.toHtml(spanned, HtmlCompat.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+    }
+
+    public Spanned displayReadableContent(String scriptedContent) {
+        return HtmlCompat.fromHtml(scriptedContent, HtmlCompat.FROM_HTML_MODE_LEGACY);
+    }
+
+    public void clearFormatting(String scriptedContent) {//clear spans
+        Spanned spannedContent = HtmlCompat.fromHtml(scriptedContent, HtmlCompat.FROM_HTML_MODE_LEGACY);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(spannedContent);
+        spannableStringBuilder.clearSpans();
+        setScriptedContent(spannableStringBuilder);
+    }
+
+    /*public void launchProcedureOfSpansCreating(String scriptedContent) {
+        String simpleContent = HtmlCompat.fromHtml(scriptedContent, HtmlCompat.FROM_HTML_MODE_LEGACY).toString();
+        note.setContent(simpleContent);
+    }*/
+
+    /*private void switchMode(Note note) {
+        if(note.getIsBasicMode())  {
+            String scryptedContent = HtmlCompat.toHtml( editTextContent_contentNote.getText(), HtmlCompat.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+            note.setContent(scryptedContent);
+        } else {
+            //simplifying of formatting increases application responsibility
+            //display warning dialog
+            String simpleContent = HtmlCompat.fromHtml(note.getContent(), HtmlCompat.FROM_HTML_MODE_LEGACY).toString();
+            note.setContent(simpleContent);
+        }
+
+        note.setIsBasicMode(!note.getIsBasicMode());
+        setUpNoteMode();
+    }*/
 
     public void configureAndShowDialogColorPalette() {
         Dialog dialogColorPalette = new Dialog(NoteActivity.this);

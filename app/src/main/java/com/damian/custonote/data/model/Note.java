@@ -1,5 +1,9 @@
 package com.damian.custonote.data.model;
 
+import android.text.Spanned;
+
+import androidx.core.text.HtmlCompat;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -83,7 +87,9 @@ public class Note implements Serializable {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(String content) { //note content is kept as HTML scripted in String
+        /*Spanned htmlContent = ;
+        content = HtmlCompat.toHtml(htmlContent.getText(), HtmlCompat.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);*/
         this.content = content;
     }
 
@@ -143,4 +149,7 @@ public class Note implements Serializable {
         this.colorBackgroundValue = colorBackgroundValue;
     }
 
+    public static Spanned displayReadableContent(String scriptedContent) {
+        return HtmlCompat.fromHtml(scriptedContent, HtmlCompat.FROM_HTML_MODE_LEGACY);
+    }
 }
