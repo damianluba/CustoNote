@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,13 +32,14 @@ public class AllFragment extends Fragment{
     List<Note> listNotes;
     private AllViewModel allViewModel;
     private FragmentAllBinding binding;
-    CheckBox checkBoxRemoveNote;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        CheckBox checkBoxRemoveNote;
         allViewModel = new ViewModelProvider(this).get(AllViewModel.class);
         binding = FragmentAllBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        ImageView imageViewIsFavourite = root.findViewById(R.id.imageViewIsFavourite);
 
         fabAddNote = getActivity().findViewById(R.id.fabAdd);
         fabAddNote.setImageResource(R.drawable.ic_add_note);

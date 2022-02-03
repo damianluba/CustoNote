@@ -13,13 +13,13 @@ public class Note implements Serializable {
     String content;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Boolean isBasicMode, isSynchronised, isFavourite;
-    int colorBackgroundValue;
+    int backgroundColorValue, backgroundTextColorValue, textColorValue;
 
     public Note(int ID, String title, String content/*, LocalDateTime timestampNoteCreated*/, Boolean isBasicMode, Boolean isFavourite) {
         this.ID = ID;
         this.title = title;
         this.content = content;
-//        this.timestampNoteCreated = timestampNoteCreated;
+        //        this.timestampNoteCreated = timestampNoteCreated;
         this.isBasicMode = isBasicMode;
         this.isFavourite = isFavourite;
     }
@@ -32,7 +32,7 @@ public class Note implements Serializable {
         this.timestampNoteModified = timestampNoteModified;
         this.isFavourite = isFavourite;
         this.isSynchronised = isSynchronised;
-        this.colorBackgroundValue = backgroundColorValue;
+        this.backgroundColorValue = backgroundColorValue;
     }
 
     public Note(String title, String content, Boolean isBasicMode, LocalDateTime timestampNoteCreated, LocalDateTime timestampNoteModified, int backgroundColorValue) {
@@ -40,7 +40,7 @@ public class Note implements Serializable {
         this.content = content;
         this.isBasicMode = isBasicMode;
         this.timestampNoteModified = timestampNoteModified;
-        this.colorBackgroundValue = backgroundColorValue;
+        this.backgroundColorValue = backgroundColorValue;
     }
 
     public Note(int ID) {
@@ -58,12 +58,8 @@ public class Note implements Serializable {
 
     @Override
     public String toString() {
-        return "Note{" +
-                "ID=" + ID +
-                ", Photo=" + Photo +
-                ", title='" + title +
-                '\'' + ", content='" + content +
-//                '\'' + ", timestampNoteCreated=" + timestampNoteCreated +
+        return "Note{" + "ID=" + ID + ", Photo=" + Photo + ", title='" + title + '\'' + ", content='" + content +
+                //                '\'' + ", timestampNoteCreated=" + timestampNoteCreated +
                 '}';
     }
 
@@ -88,9 +84,11 @@ public class Note implements Serializable {
     }
 
     public void setContent(String content) { //note content is kept as HTML scripted in String
-        /*Spanned htmlContent = ;
-        content = HtmlCompat.toHtml(htmlContent.getText(), HtmlCompat.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);*/
         this.content = content;
+    }
+
+    public Spanned displayReadableContent(String scriptedContent) {
+        return HtmlCompat.fromHtml(scriptedContent, HtmlCompat.FROM_HTML_MODE_LEGACY);
     }
 
     public Boolean getIsBasicMode() {
@@ -141,15 +139,54 @@ public class Note implements Serializable {
         this.isSynchronised = isSynchronised;
     }
 
-    public int getColorBackgroundValue() {
-        return colorBackgroundValue;
+    public int getBackgroundColorValue() {
+        return backgroundColorValue;
     }
 
-    public void setColorBackgroundValue(int colorBackgroundValue) {
-        this.colorBackgroundValue = colorBackgroundValue;
+    public void setBackgroundColorValue(int backgroundColorValue) {
+        this.backgroundColorValue = backgroundColorValue;
     }
 
-    public static Spanned displayReadableContent(String scriptedContent) {
-        return HtmlCompat.fromHtml(scriptedContent, HtmlCompat.FROM_HTML_MODE_LEGACY);
+    public int getTextBackgroundColorValue() {
+        return backgroundTextColorValue;
+    }
+
+    public void setTextBackgroundColorValue(int backgroundTextColorValue) {
+        this.backgroundTextColorValue = backgroundTextColorValue;
+    }
+
+    public int getTextColorValue() {
+        return textColorValue;
+    }
+
+    public void setTextColorValue(int textColorValue) {
+        this.textColorValue = textColorValue;
     }
 }
+/*
+    //colors for note parameterising
+    public Interface chooseColor() {
+        */
+/*final BackgroundColorSpan backgroundColorSpan;
+        final ForegroundColorSpan foregroundColorSpan;*//*
+
+        final Color textColor = Color.valueOf(Color.BLACK);
+        return new ColorInterface(textColor);
+    }
+}
+
+public class ColorInterface implements Interface {
+    */
+/*final BackgroundColorSpan backgroundColorSpan;
+    final ForegroundColorSpan foregroundColorSpan;*//*
+
+    private final Color textColor;
+
+    public ColorInterface(Color color) {
+        this.textColor = color;
+    }
+
+    public Color getTextColor() {
+        return textColor;
+    }
+}*/

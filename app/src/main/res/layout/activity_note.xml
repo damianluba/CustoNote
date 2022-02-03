@@ -66,12 +66,63 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarAlignText"
+            android:id="@+id/toolbarFontSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
+            android:visibility="gone"
+            app:contentInsetStart="0dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonFontSizeMinus"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:background="@color/dark_teal"
+                    android:gravity="center|center_horizontal"
+                    android:padding="0dp"
+                    android:text="-"
+                    android:textSize="20sp"
+                    app:iconPadding="0dp" />
+
+                <TextView
+                    android:id="@+id/textViewFontSize"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:text="24"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/buttonFontSizePlus"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:background="@color/dark_teal"
+                    android:gravity="center|center_horizontal"
+                    android:padding="0dp"
+                    android:text="+"
+                    android:textSize="20sp"
+                    app:iconPadding="0dp" />
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarTextAlignment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            android:visibility="gone"
             app:contentInsetStart="0dp"
             app:layout_constraintBottom_toTopOf="@id/toolbarTextTools"
             app:layout_constraintEnd_toEndOf="parent"
@@ -139,7 +190,6 @@
                     android:layout_height="@dimen/customizing_item_dimen"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="@color/gray"
                     android:foreground="@drawable/ic_bold" />
 
                 <ImageView
@@ -148,7 +198,6 @@
                     android:layout_height="@dimen/customizing_item_dimen"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="@color/gray"
                     android:foreground="@drawable/ic_italic"
                     android:foregroundTintMode="multiply" />
 
@@ -158,7 +207,6 @@
                     android:layout_height="@dimen/customizing_item_dimen"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="@color/gray"
                     android:foreground="@drawable/ic_underline" />
 
                 <Button
@@ -172,10 +220,9 @@
                     android:paddingTop="0dp"
                     android:paddingRight="0dp"
                     android:paddingBottom="0dp"
-                    android:text="25"
+                    android:text="24"
                     android:textColor="@color/black"
                     android:textSize="24sp"
-                    android:tooltipText="25"
                     app:iconPadding="0dp" />
 
                 <Button
@@ -195,7 +242,7 @@
                     app:iconPadding="0dp" />
 
                 <TextView
-                    android:id="@+id/textViewHighlightColor"
+                    android:id="@+id/textViewBackgroundColor"
                     android:layout_width="@dimen/customizing_item_dimen"
                     android:layout_height="@dimen/customizing_item_dimen"
                     android:layout_weight="1"

@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_IS_BASIC_MODE = "IS_BASIC_MODE";
     public static final String COL_IS_FAVOURITE = "IS_FAVOURITE";
     public static final String COL_IS_SYNCHRONISED = "IS_SYNCHRONISED";
-    public static final String FORMAT_DATE_TIME = "d MMM YYYY, HH:mm";
+    public static final String FORMAT_DATE_TIME = "d MMM YYYY, H:mm";
     public static final String COL_BACKGROUND_COLOR = "BACKGROUND_COLOR";
 
     //methods for notes managing
@@ -63,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_CONTENT, note.getContent());
         note.setIsSynchronised(false);//TODO
 //        contentValues.put(COL_IS_SYNCHRONISED, note.getIsSynchronised());
-        contentValues.put(COL_BACKGROUND_COLOR, note.getColorBackgroundValue());
+        contentValues.put(COL_BACKGROUND_COLOR, note.getBackgroundColorValue());
         /*note.setIsBasicMode(true);
         note.setIsFavourite(false);*/
 
@@ -71,7 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_TIMESTAMP_CREATED,  LocalDateTime.now().toString());
 //        contentValues.put(COL_IS_FAVOURITE, (note.getIsFavourite()?1:0));
 //        contentValues.put(COL_IS_SYNCHRONISED, (note.getIsSynchronised()?1:0));
-        contentValues.put(COL_BACKGROUND_COLOR, note.getColorBackgroundValue());
+        contentValues.put(COL_BACKGROUND_COLOR, note.getBackgroundColorValue());
 
         database.insert(DATABASE_TABLE, null, contentValues);
         database.close();
@@ -171,7 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         note.setIsFavourite(cursor.getInt(6) == 1);
         note.setIsSynchronised(cursor.getInt(7) == 1);
-        note.setColorBackgroundValue(cursor.getInt(8));
+        note.setBackgroundColorValue(cursor.getInt(8));
     }
 
     public List<Note> getNotes() {

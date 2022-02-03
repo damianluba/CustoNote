@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="choose a color of background" />
+        android:text="choose a color" />
 
     <GridLayout
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
         android:useDefaultMargins="true">
 
         <ImageView
-            android:id="@+id/imageViewBackgroundPurple"
+            android:id="@+id/imageViewPurple"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -33,7 +33,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundBrown"
+            android:id="@+id/imageViewBrown"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -42,7 +42,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundRed"
+            android:id="@+id/imageViewRed"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -51,7 +51,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundMagenta"
+            android:id="@+id/imageViewMagenta"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -60,7 +60,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundGray"
+            android:id="@+id/imageViewGray"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -69,7 +69,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundOrange"
+            android:id="@+id/imageViewOrange"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -78,7 +78,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundWhite"
+            android:id="@+id/imageViewWhite"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -86,7 +86,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundDarkGreen"
+            android:id="@+id/imageViewDarkGreen"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -95,7 +95,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundYellow"
+            android:id="@+id/imageViewYellow"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -104,7 +104,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundCyan"
+            android:id="@+id/imageViewCyan"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -113,7 +113,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundBlue"
+            android:id="@+id/imageViewBlue"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"
@@ -122,7 +122,7 @@
             android:foregroundTintMode="multiply" />
 
         <ImageView
-            android:id="@+id/imageViewBackgroundGreen"
+            android:id="@+id/imageViewGreen"
             android:layout_width="@dimen/customizing_item_dimen"
             android:layout_height="@dimen/customizing_item_dimen"
             android:background="@color/transparent"

@@ -30,30 +30,26 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editTextTitle_contentNote"
+                android:id="@+id/editTextTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:hint="Title of note"
-                android:singleLine="true"
+                android:singleLine="false"
                 android:textAllCaps="false"
                 android:textSize="40sp"
                 android:textStyle="bold"
                 tools:text="@string/sampleTextInNoteTitle" />
 
             <EditText
-                android:id="@+id/editTextContent_contentNote"
+                android:id="@+id/editTextContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
-                android:ellipsize="end"
-                android:focusable="true"
                 android:hint="Here write your ideas and notes"
-                android:inputType="textPersonName"
-                android:textAlignment="inherit"
                 android:textAllCaps="false"
                 android:textSize="20sp"
-                tools:text="@string/sampleTextInNoteContent" />
+                tools:text="@string/sampleTextInNoteContent"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

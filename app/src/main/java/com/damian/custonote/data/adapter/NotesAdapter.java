@@ -47,18 +47,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     @Override
     public void onBindViewHolder(@NonNull NotesPositionViewHolder holder, int position) { //lists all notes with all their parameters
         holder.textViewTitle.setText(listNotes.get(position).getTitle());
-
-        holder.textViewContent.setText(Note.displayReadableContent(listNotes.get(position).getContent()));
-        holder.noteBackground.setBackgroundColor(listNotes.get(position).getColorBackgroundValue());
+        holder.textViewContent.setText(listNotes.get(position).displayReadableContent(listNotes.get(position).getContent()));
+        holder.noteBackground.setBackgroundColor(listNotes.get(position).getBackgroundColorValue());
 
         if(listNotes.get(position).getIsFavourite())
             holder.imageViewIsFavourite.setImageResource(R.drawable.ic_star);
         else holder.imageViewIsFavourite.setImageResource(R.drawable.ic_empty_star);
 
-        holder.textViewContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
+
+        holder.imageViewIsFavourite.setOnClickListener(v -> {
+
         });
     }
 
