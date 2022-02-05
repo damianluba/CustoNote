@@ -142,13 +142,11 @@ public class NoteActivity extends AppCompatActivity {
         });
 
         menuItemSwitchMode.setOnMenuItemClickListener(menuItem -> {
-//            switchMode(note);
             if(note.getIsBasicMode())
                 configureButtonsForAdvancedMode();
             else {  //switch to basic mode
                 AlertDialog alertDialogClearFormatting;
                 clearFormatting(note.getContent());
-
             }
             note.setIsBasicMode(!note.getIsBasicMode());
             setUpNoteMode();

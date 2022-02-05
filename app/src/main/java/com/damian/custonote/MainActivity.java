@@ -61,49 +61,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_main_activity, menu);
-        menuItemImageUser = menu.findItem(R.id.itemImageUser);
-        menuItemSearch = menu.findItem(R.id.menuItemSearch);
-
-        menuItemImageUser.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                showDialog();
-                return false;
-            }
-        });
-
-        menuItemSearch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                startActivity(new Intent(context, SearchableActivity.class));
-                return false;
-            }
-        });
-        return true /*super.onCreateOptionsMenu(menu)*/;
+        return super.onCreateOptionsMenu(menu);
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener bottomNavigationViewItemListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
-            switch(item.getItemId()) { //select among buttons placed on the bottom of the navigation bar
-                case R.id.navigation_all:
-                    selectedFragment = new AllFragment();
-                    break;
-
-                case R.id.navigation_favourites:
-                    selectedFragment = new FavouritesFragment();
-                    break;
-
-                case R.id.navigation_labels:
-                    selectedFragment = new LabelsFragment();
-                    break;
-            }
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-            return true;
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.itemImageUser:
+                showDialog();
+                return false;
+            case R.id.itemSearch:
+                startActivity(new Intent(context, SearchableActivity.class));
+                return false;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener bottomNavigationViewItemListener = item -> {
+        Fragment selectedFragment = null;
+        switch(item.getItemId()) { //select among buttons placed on the bottom of the navigation bar
+            case R.id.navigation_all:
+                selectedFragment = new AllFragment();
+                break;
+
+            case R.id.navigation_favourites:
+                selectedFragment = new FavouritesFragment();
+                break;
+
+            case R.id.navigation_labels:
+                selectedFragment = new LabelsFragment();
+                break;
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+        return true;
     };
 
     @Override

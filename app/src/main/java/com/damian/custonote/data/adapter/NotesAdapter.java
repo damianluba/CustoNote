@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +26,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     private OnSelectedNoteListener onSelectedNoteListener;
     private boolean checkingNotesInProgress;
 
-    //    adapting the note to full view: https://larntech.net/recyclerview-onclicklistener-open-new-activity-filter-recyclerview-using-search-view/
+    //    adapting the note to full view: https://larntech
+    //    .net/recyclerview-onclicklistener-open-new-activity-filter-recyclerview-using-search-view/
 
     public NotesAdapter(Context context, List<Note> listNotes, OnSelectedNoteListener onSelectedNoteListener) {
         this.context = context;
@@ -37,27 +40,70 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         this.listNotes = listNotes;
     }
 
-    @NonNull @Override
+    @Override
     public NotesPositionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.layout_single_note_in_browsing, parent, false);
-        return new NotesPositionViewHolder(view, this);
+        NotesPositionViewHolder viewHolder = new NotesPositionViewHolder(view, this);
+        /*viewHolder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //若在多选删除情况下，点击item选择/取消checkbox，不能播放
+                if(checkingNotesInProgress) {
+                    if(viewHolder.checkBoxNoteChecked.isChecked()) {
+                        viewHolder.checkBoxNoteChecked.setChecked(false);
+                    } else
+                        viewHolder.checkBoxNoteChecked.setChecked(true);
+                    return;
+                }
+                int position = viewHolder.getAdapterPosition();
+
+            }
+        });*/
+
+        /*viewHolder.view.setOnLongClickListener((View.OnLongClickListener) v -> {
+            if(!checkingNotesInProgress) {
+                longClickListener(viewHolder);
+            }
+            return true;
+        });*/
+        viewHolder.checkBoxNoteChecked.setOnClickListener(v -> {
+            int selectedPosition = viewHolder.getAdapterPosition();
+            Note selectedNotes = listNotes.get(selectedPosition);
+            if(viewHolder.checkBoxNoteChecked.isChecked()) {
+                /*multipleFileList.add(selectedRecordingFiles);
+            } else {
+                multipleFileList.remove(selectedRecordingFiles);*/
+            }
+        });
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotesPositionViewHolder holder, int position) { //lists all notes with all their parameters
-        holder.textViewTitle.setText(listNotes.get(position).getTitle());
-        holder.textViewContent.setText(listNotes.get(position).displayReadableContent(listNotes.get(position).getContent()));
-        holder.noteBackground.setBackgroundColor(listNotes.get(position).getBackgroundColorValue());
+    public void onBindViewHolder(@NonNull NotesPositionViewHolder holder, int position) { //lists all notes with all
+        // their parameters
+        final Note note = listNotes.get(position);
+        holder.textViewTitle.setText(note.getTitle());
+        holder.textViewContent.setText(note.displayReadableContent(note.getContent()));
+        holder.noteBackground.setBackgroundColor(note.getBackgroundColorValue());
 
-        if(listNotes.get(position).getIsFavourite())
+        if(note.getIsFavourite())
             holder.imageViewIsFavourite.setImageResource(R.drawable.ic_star);
-        else holder.imageViewIsFavourite.setImageResource(R.drawable.ic_empty_star);
-
+        else
+            holder.imageViewIsFavourite.setImageResource(R.drawable.ic_empty_star);
 
         holder.imageViewIsFavourite.setOnClickListener(v -> {
-
         });
+
+
+        holder.checkBoxNoteChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                System.out.println("Checkbox clicked");
+
+            }
+        });
+
     }
 
     @Override
@@ -65,11 +111,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         return listNotes.size();
     }
 
-    public class NotesPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class NotesPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnLongClickListener {
         SpannableTextView spannableTextView;
         TextView textViewTitle, textViewContent;
         ImageView imageViewMainImageOfNote, imageViewIsFavourite;
         NotesAdapter notesAdapter;
+        CheckBox checkBoxNoteChecked;
         ConstraintLayout noteBackground;
 
         public NotesPositionViewHolder(@NonNull View itemView, @NonNull NotesAdapter notesAdapter) {
@@ -78,9 +126,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
             textViewContent = itemView.findViewById(R.id.textViewContent);
             imageViewIsFavourite = itemView.findViewById(R.id.imageViewIsFavourite);
             noteBackground = itemView.findViewById(R.id.noteBackground);
+            checkBoxNoteChecked = itemView.findViewById(R.id.checkBoxNoteChecked);
+            //            imageViewMainImageOfNote = itemView.findViewById(R.id.imageViewMainImageOfNote);
             this.notesAdapter = notesAdapter;
-
-//            imageViewMainImageOfNote = itemView.findViewById(R.id.imageViewMainImageOfNote);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -105,8 +153,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         holder.itemView.setVisibility(View.GONE);
     }*/
 
+    private void deleteSelectedNotes() {
+    }
+
     public interface OnSelectedNoteListener {
-        void onNoteClickListener(int position);
+        void onNoteClickListener(int position); //the order of activities is in AllFragment
         void onLongNoteClickListener(int position);
     }
 

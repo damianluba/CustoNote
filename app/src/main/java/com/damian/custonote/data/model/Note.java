@@ -12,7 +12,7 @@ public class Note implements Serializable {
     String title;
     String content;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
-    Boolean isBasicMode, isSynchronised, isFavourite;
+    Boolean isBasicMode, isSynchronised, isFavourite, isSelectedToRemove;
     int backgroundColorValue, backgroundTextColorValue, textColorValue;
 
     public Note(int ID, String title, String content/*, LocalDateTime timestampNoteCreated*/, Boolean isBasicMode, Boolean isFavourite) {

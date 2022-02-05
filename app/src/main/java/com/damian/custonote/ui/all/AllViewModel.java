@@ -16,4 +16,24 @@ public class AllViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
+    public void selectNote() {
+
+    }
+
+    public void checkAllNotes() {
+
+    }
+
+    public void uncheckNote() {
+
+    }
+
+    public void uncheckAllNotes() {
+
+    }
+
+    public void markAsFavourite() {
+
+    }
 }

@@ -19,15 +19,15 @@
             android:id="@+id/noteBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/magenta">
+            android:background="@color/orange">
 
             <CheckBox
-                android:id="@+id/checkBoxCheckedNote"
+                android:id="@+id/checkBoxNoteChecked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,7 +66,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/imageViewIsFavourite"
-                app:layout_constraintStart_toEndOf="@+id/checkBoxCheckedNote"
+                app:layout_constraintStart_toEndOf="@+id/checkBoxNoteChecked"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/sampleTextInNoteTitle" />
 

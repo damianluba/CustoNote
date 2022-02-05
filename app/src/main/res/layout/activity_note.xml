@@ -270,7 +270,8 @@
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/ic_list_numbered"
-                    android:tooltipText="numbered list" />
+                    android:tooltipText="numbered list"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/imageViewBulletedList"
@@ -279,7 +280,8 @@
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/ic_list_bulleted"
-                    android:tooltipText="bulleted list" />
+                    android:tooltipText="bulleted list"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>

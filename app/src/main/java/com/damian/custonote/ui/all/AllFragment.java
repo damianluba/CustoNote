@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,14 +34,28 @@ public class AllFragment extends Fragment{
     List<Note> listNotes;
     private AllViewModel allViewModel;
     private FragmentAllBinding binding;
+    private Boolean checkingNoteInProgress;
+    CheckBox checkBoxRemoveNote;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        CheckBox checkBoxRemoveNote;
+        checkingNoteInProgress = false;
         allViewModel = new ViewModelProvider(this).get(AllViewModel.class);
+        /*allViewModel.stateManager.toolbarState.observe(this, { state ->
+                when(state) {
+            ToolbarState.NormalViewState -> {
+                setNormalToolbar();
+                allViewModel.stateManager.clearSelectedList();
+            }
+            ToolbarState.MultiSelectionState -> {
+                setSelectedToolbar();
+                allViewModel.stateManager.clearSelectedList();
+            }
+
+        }
+        })*/
         binding = FragmentAllBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        ImageView imageViewIsFavourite = root.findViewById(R.id.imageViewIsFavourite);
 
         fabAddNote = getActivity().findViewById(R.id.fabAdd);
         fabAddNote.setImageResource(R.drawable.ic_add_note);
@@ -55,6 +71,23 @@ public class AllFragment extends Fragment{
         return root;
     }
 
+    /*private void setSelectedToolbar() {
+        toolbar.menu.clear();
+        toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorSelected));
+    }*/
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.action_bar_delete_main_activity, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onResume() {
@@ -70,6 +103,7 @@ public class AllFragment extends Fragment{
 
     public void showNotesInUi() {
         View root = binding.getRoot();
+        ViewGroup viewGroupDelete /*= root.findViewById(R.id.)*/;
         recyclerViewAllNotes = root.findViewById(R.id.recyclerViewAllNotes); //R chosen from com.damian.custonote.R
         recyclerViewAllNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -85,15 +119,28 @@ public class AllFragment extends Fragment{
                 Note note = listNotes.get(position);
                 intent.putExtra("bundleNote", note);
                 startActivity(intent);
-
             }
 
             @Override
             public void onLongNoteClickListener(int position) {
                 Toast.makeText(getContext().getApplicationContext(), "longer press", Toast.LENGTH_LONG).show();
+                checkingNoteInProgress = true;
+                root.findViewById(R.id.itemDelete).setOnClickListener(v -> {
+//                    deleteNotes();
+
+                });
+//                View viewDeleteNotes = getLayoutInflater().inflate(R.menu.action_bar_delete_main_activity, viewGroupDelete);
+
+
+/*                getMenuInflater().inflate(R.menu.action_bar_note_activity, action_bar_delete_main_activity);
+                checkBoxNoteChecked.setVisibility(View.VISIBLE);*/
             }
+
+
         });
         //the methods for clicks in a note content are defined in NotesAdapter
         recyclerViewAllNotes.setAdapter(notesAdapter);
     }
+
+
 }
