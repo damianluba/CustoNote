@@ -70,7 +70,7 @@ public class NoteActivity extends AppCompatActivity {
         binding = ActivityNoteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); //shows the arrow allowing to go back by pressing its
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         context= this;
@@ -102,7 +102,7 @@ public class NoteActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_note_activity, menu);
         menuItemSave = menu.findItem(R.id.itemSave);
-        menuItemDelete = menu.findItem(R.id.itemDelete);
+        menuItemDelete = menu.findItem(R.id.itemDelete_MoteActivity);
         menuItemStar = menu.findItem(R.id.itemStar);
         menuItemSwitchMode = menu.findItem(R.id.itemSwitchMode);
         menuItemBackgroundColor = menu.findItem(R.id.itemBackgroundColor);

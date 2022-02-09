@@ -91,6 +91,7 @@
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_list_bulleted.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_list_numbered.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_search.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_login.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_note.xml" value="0.25" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_searchable.xml" value="0.28489583333333335" />
@@ -99,6 +100,7 @@
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/fragment_favourites.xml" value="0.1527777777777778" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/fragment_labels.xml" value="0.1" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/fragment_note.xml" value="0.27247191011235955" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_dialog_basic_info_about_user.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_dialog_color_palette.xml" value="0.22" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_dialog_font_size.xml" value="0.25" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_single_note_in_browsing.xml" value="0.33" />

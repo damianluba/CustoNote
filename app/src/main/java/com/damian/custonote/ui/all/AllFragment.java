@@ -4,17 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,66 +27,41 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-public class AllFragment extends Fragment{
-    RecyclerView recyclerViewAllNotes;
-    FloatingActionButton fabAddNote;
-    List<Note> listNotes;
+
+public class AllFragment extends Fragment {
+    private RecyclerView recyclerViewAllNotes;
+    private FloatingActionButton fabAddNote;
+    private List<Note> listNotes;
     private AllViewModel allViewModel;
     private FragmentAllBinding binding;
-    private Boolean checkingNoteInProgress;
-    CheckBox checkBoxRemoveNote;
+    private Boolean notesCheckingInProgress;
+    private CheckBox checkBoxRemoveNote;
+//    private ActionMode actionMode;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        checkingNoteInProgress = false;
         allViewModel = new ViewModelProvider(this).get(AllViewModel.class);
-        /*allViewModel.stateManager.toolbarState.observe(this, { state ->
-                when(state) {
-            ToolbarState.NormalViewState -> {
-                setNormalToolbar();
-                allViewModel.stateManager.clearSelectedList();
-            }
-            ToolbarState.MultiSelectionState -> {
-                setSelectedToolbar();
-                allViewModel.stateManager.clearSelectedList();
-            }
-
-        }
-        })*/
         binding = FragmentAllBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        fabAddNote = getActivity().findViewById(R.id.fabAdd);
-        fabAddNote.setImageResource(R.drawable.ic_add_note);
-
-        fabAddNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), NoteActivity.class));
-            }
-        });
+        recyclerViewAllNotes = root.findViewById(R.id.recyclerViewAllNotes); //R chosen from com.damian.custonote.R
+        recyclerViewAllNotes.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewAllNotes.setHasFixedSize(true); //?
+        recyclerViewAllNotes.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
 
         showNotesInUi();
         return root;
     }
 
-    /*private void setSelectedToolbar() {
-        toolbar.menu.clear();
-        toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorSelected));
-    }*/
-
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
+/*    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.action_bar_delete_main_activity, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-
-        return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onResume() {
@@ -106,15 +80,17 @@ public class AllFragment extends Fragment{
         ViewGroup viewGroupDelete /*= root.findViewById(R.id.)*/;
         recyclerViewAllNotes = root.findViewById(R.id.recyclerViewAllNotes); //R chosen from com.damian.custonote.R
         recyclerViewAllNotes.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewAllNotes.setHasFixedSize(true); //?
+//        recyclerViewAllNotes.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
 
         DatabaseHelper databaseHelper = new DatabaseHelper(getActivity().getApplicationContext());
         listNotes = databaseHelper.getNotes();
         Log.i("database records quantity - after launching", String.valueOf(listNotes.size()));
 
         //this adapter creates 2 listeners for common click and long click
-        NotesAdapter notesAdapter = new NotesAdapter(getContext().getApplicationContext(), listNotes, new NotesAdapter.OnSelectedNoteListener() {
+        final NotesAdapter notesAdapter = new NotesAdapter(getContext().getApplicationContext(), listNotes, new NotesAdapter.OnSelectedNoteListener() {
             @Override
-            public void onNoteClickListener(int position) {
+            public void onNoteClickListener(int position, View view) {
                 Intent intent = new Intent(getActivity(), NoteActivity.class);
                 Note note = listNotes.get(position);
                 intent.putExtra("bundleNote", note);
@@ -122,25 +98,58 @@ public class AllFragment extends Fragment{
             }
 
             @Override
-            public void onLongNoteClickListener(int position) {
+            public void onLongNoteClickListener(int position, View view) {
                 Toast.makeText(getContext().getApplicationContext(), "longer press", Toast.LENGTH_LONG).show();
-                checkingNoteInProgress = true;
-                root.findViewById(R.id.itemDelete).setOnClickListener(v -> {
-//                    deleteNotes();
-
-                });
-//                View viewDeleteNotes = getLayoutInflater().inflate(R.menu.action_bar_delete_main_activity, viewGroupDelete);
-
-
-/*                getMenuInflater().inflate(R.menu.action_bar_note_activity, action_bar_delete_main_activity);
-                checkBoxNoteChecked.setVisibility(View.VISIBLE);*/
+                /*if(actionMode == null) {
+                    notesCheckingInProgress = true;
+                    actionMode =  ((AppCompatActivity) getActivity()).startActionMode(actionModeCallback);
+                    actionMode.setTitle("Delete selected notes");
+                }*/
             }
-
-
         });
         //the methods for clicks in a note content are defined in NotesAdapter
         recyclerViewAllNotes.setAdapter(notesAdapter);
     }
 
+    /*private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+        // override methods for implementing methods in case of will of toolbar change
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            mode.setTitle("Delete selected notes");
+            mode.getMenuInflater().inflate(R.menu.action_bar_delete_main_activity, menu);
+            if(mode == null)
+                Toast.makeText(getContext(), "there's no action mode", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch(item.getItemId()) {
+                case R.id.itemMenuDelete_MainActivity: //delete notes now
+//                    AlertDialog alertDialogDeleteNotes = new AlertDialog(th);
+                    mode.finish();
+                    return true;
+                case R.id.menuItemSelectAll:
+                    //select all notes
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mode.finish();
+            mode = null;
+            notesCheckingInProgress = false;
+            showNotesInUi();
+        }
+    };*/
 }

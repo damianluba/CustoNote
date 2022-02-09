@@ -19,7 +19,7 @@
         android:tooltipText="Choose color of this note"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/itemDelete"
+        android:id="@+id/itemDelete_MoteActivity"
         android:icon="@drawable/ic_delete"
         android:iconTint="@color/white"
         android:title="Delete the note"

@@ -58,7 +58,7 @@ public class SearchableActivity extends AppCompatActivity {
                 List<Note> listFoundNotes = databaseHelper.findNoteWithPhrase(phrase);
                 NotesAdapter notesAdapter = new NotesAdapter(getApplicationContext(), listFoundNotes, new NotesAdapter.OnSelectedNoteListener() {
                     @Override
-                    public void onNoteClickListener(int position) {
+                    public void onNoteClickListener(int position, View view) {
                         Intent intent = new Intent(SearchableActivity.this, NoteActivity.class);
                         Note note = listFoundNotes.get(position);
                         intent.putExtra("bundleNote", note);
@@ -66,7 +66,7 @@ public class SearchableActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onLongNoteClickListener(int position) {
+                    public void onLongNoteClickListener(int position, View view) {
                         Toast.makeText(SearchableActivity.this, "longer press", Toast.LENGTH_LONG).show();
                     }
                 });

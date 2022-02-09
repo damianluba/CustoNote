@@ -6,13 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.labels.LabelsFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar3"
+    <ImageView
+        android:id="@+id/imageView3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
+        android:layout_height="match_parent"
+        tools:src="@drawable/ic_label" />
 
     <TextView
         android:id="@+id/text_labels"

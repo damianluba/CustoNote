@@ -32,6 +32,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
     def room_version = "2.4.0"
     def lifecycle_version = "2.3.1"
     def navigation_version = "2.3.5"
@@ -61,9 +62,6 @@ dependencies {
 
 //Firebase
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
-
-    //library for customised switches
-    implementation 'com.polyak:icon-switch:1.0.0'
-    //library for stylised text
-    implementation 'com.milaptank:stv:1.0.0'
+//Glide
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
 }

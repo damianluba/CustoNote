@@ -24,7 +24,7 @@ public class FavouritesFragment extends Fragment {
         favouritesViewModel = new ViewModelProvider(this).get(FavouritesViewModel.class);
         binding = FragmentFavouritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-//        fabAddFavourite = root.findViewById(R.id.fabAdd);
+//        fabAddFavourite = getActivity().findViewById(R.id.fabAdd);
         final TextView textView = binding.textFavourites;
 
         favouritesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -33,12 +33,10 @@ public class FavouritesFragment extends Fragment {
                 textView.setText(s);
             }
         });
-
-        /*fabAddFavourite.setImageResource(R.drawable.ic_add_favourite);
-        fabAddFavourite.setOnClickListener(new View.OnClickListener() {
+        /*((MainActivity)getActivity()).setFragmentRefreshListener(new MainActivity.FragmentRefreshListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Favourite notes", Toast.LENGTH_LONG).show();
+            public void onRefresh() {
+
             }
         });*/
         return root;

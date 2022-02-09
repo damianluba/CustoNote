@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.damian.custonote.R;
 import com.damian.custonote.data.model.Note;
-import com.mpt.android.stv.SpannableTextView;
 
 import java.util.List;
 
@@ -24,7 +22,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     Context context;
     List<Note> listNotes;
     private OnSelectedNoteListener onSelectedNoteListener;
-    private boolean checkingNotesInProgress;
+    public boolean checkingNotesInProgress;
+
+    public int selectedCount = 1;
+
 
     //    adapting the note to full view: https://larntech
     //    .net/recyclerview-onclicklistener-open-new-activity-filter-recyclerview-using-search-view/
@@ -42,13 +43,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
 
     @Override
     public NotesPositionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        checkingNotesInProgress = false;
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.layout_single_note_in_browsing, parent, false);
         NotesPositionViewHolder viewHolder = new NotesPositionViewHolder(view, this);
+
         /*viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //若在多选删除情况下，点击item选择/取消checkbox，不能播放
                 if(checkingNotesInProgress) {
                     if(viewHolder.checkBoxNoteChecked.isChecked()) {
                         viewHolder.checkBoxNoteChecked.setChecked(false);
@@ -67,6 +69,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
             }
             return true;
         });*/
+
         viewHolder.checkBoxNoteChecked.setOnClickListener(v -> {
             int selectedPosition = viewHolder.getAdapterPosition();
             Note selectedNotes = listNotes.get(selectedPosition);
@@ -80,31 +83,36 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotesPositionViewHolder holder, int position) { //lists all notes with all
-        // their parameters
+    public void onBindViewHolder(@NonNull NotesPositionViewHolder holder, int position) { //lists all notes with all their parameters
         final Note note = listNotes.get(position);
         holder.textViewTitle.setText(note.getTitle());
         holder.textViewContent.setText(note.displayReadableContent(note.getContent()));
         holder.noteBackground.setBackgroundColor(note.getBackgroundColorValue());
 
-        if(note.getIsFavourite())
-            holder.imageViewIsFavourite.setImageResource(R.drawable.ic_star);
-        else
-            holder.imageViewIsFavourite.setImageResource(R.drawable.ic_empty_star);
+
+        holder.imageViewIsFavourite.setImageResource(note.getIsFavourite() == true ? R.drawable.ic_star :
+                R.drawable.ic_empty_star);
 
         holder.imageViewIsFavourite.setOnClickListener(v -> {
         });
 
+        if(checkingNotesInProgress) {
+            holder.checkBoxNoteChecked.setVisibility(View.VISIBLE);
+            holder.checkBoxNoteChecked.setOnCheckedChangeListener((buttonView, isChecked) -> System.out.println(
+            "Checkbox clicked"));
+            checkingNotesInProgress = false;
 
-        holder.checkBoxNoteChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                System.out.println("Checkbox clicked");
-
-            }
-        });
-
+        }
+        else {
+            holder.checkBoxNoteChecked.setVisibility(View.GONE);
+            checkingNotesInProgress = true;
+        }
     }
+
+    /*public void switchMode(boolean removingNotes) {
+        this.removingNotes = removingNotes;
+        notifyDataSetChanged();
+    }*/
 
     @Override
     public int getItemCount() {
@@ -113,7 +121,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
 
     public class NotesPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener {
-        SpannableTextView spannableTextView;
         TextView textViewTitle, textViewContent;
         ImageView imageViewMainImageOfNote, imageViewIsFavourite;
         NotesAdapter notesAdapter;
@@ -130,18 +137,27 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
             //            imageViewMainImageOfNote = itemView.findViewById(R.id.imageViewMainImageOfNote);
             this.notesAdapter = notesAdapter;
 
+            if(checkingNotesInProgress) {
+                checkBoxNoteChecked.setVisibility(View.VISIBLE);
+                checkBoxNoteChecked.setOnCheckedChangeListener((buttonView, isChecked) -> System.out.println(
+                        "Checkbox clicked"));
+            } else {
+                checkBoxNoteChecked.setVisibility(View.GONE);
+            }
+
+
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            onSelectedNoteListener.onNoteClickListener(getAdapterPosition());
+            onSelectedNoteListener.onNoteClickListener(getAdapterPosition(), view);
         }
 
         @Override
         public boolean onLongClick(View view) {
-            onSelectedNoteListener.onLongNoteClickListener(getAdapterPosition());
+            onSelectedNoteListener.onLongNoteClickListener(getAdapterPosition(), view);
             return false;
         }
     }
@@ -157,11 +173,75 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     }
 
     public interface OnSelectedNoteListener {
-        void onNoteClickListener(int position); //the order of activities is in AllFragment
-        void onLongNoteClickListener(int position);
+        void onNoteClickListener(int position, View view); //the order of activities is in AllFragment
+        void onLongNoteClickListener(int position, View view);
     }
 
     public void setOnNoteClickListener(OnSelectedNoteListener onSelectedNoteListener) {
         this.onSelectedNoteListener = onSelectedNoteListener;
     }
+
+    public interface NotesCallback {
+        void switchRecyclerViewToSelectMode();
+        void jumpToNoteActivity();
+        void onAllSelected();
+        void onPartSelected();
+    }
+
+    public void switchMode(boolean removingNotes) {
+        if(removingNotes) {
+
+        }
+    }
+
+    /*private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+        // override methods for implementing methods in case of will of toolbar change
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            mode.getMenuInflater().inflate(R.menu.action_bar_delete_main_activity, menu);
+            return false;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.itemMenuDelete_MainActivity: //delete notes now
+                   //deleteSelectedNotes()
+                    mode.finish();
+                    return true;
+                case R.id.menuItemSelectAll:
+                    //select all notes
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mode.finish();
+            mode = null;
+        }
+
+        private void deleteSelectedNotes() {
+            *//*while() {
+
+
+            }*//*
+        }
+    };*/
+
+    public void updateRecyclerView(List<Note> listSelectedNotes) {
+        /*for( i :listSelectedNotes) {
+            .delete(i);
+        }*/
+        notifyDataSetChanged();
+    }
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/navigation_all">
 
@@ -10,20 +10,18 @@
         android:id="@+id/navigation_all"
         android:name="com.damian.custonote.ui.all.AllFragment"
         android:label="@string/title_all"
-        tools:layout="@layout/fragment_all">
-    </fragment>
+        tools:layout="@layout/fragment_all"></fragment>
 
     <fragment
         android:id="@+id/navigation_favourites"
         android:name="com.damian.custonote.ui.favourites.FavouritesFragment"
         android:label="@string/title_favourites"
-        tools:layout="@layout/fragment_favourites">
-    </fragment>
+        tools:layout="@layout/fragment_favourites"></fragment>
 
     <fragment
         android:id="@+id/navigation_labels"
         android:name="com.damian.custonote.ui.labels.LabelsFragment"
         android:label="@string/title_labels"
-        tools:layout="@layout/fragment_labels"/>
+        tools:layout="@layout/fragment_labels" />
 
 </navigation>

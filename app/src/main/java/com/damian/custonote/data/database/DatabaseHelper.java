@@ -61,16 +61,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_TITLE, note.getTitle());
         contentValues.put(COL_CONTENT, note.getContent());
-        note.setIsSynchronised(false);//TODO
-//        contentValues.put(COL_IS_SYNCHRONISED, note.getIsSynchronised());
+        note.setIsSynchronised(false);
         contentValues.put(COL_BACKGROUND_COLOR, note.getBackgroundColorValue());
-        /*note.setIsBasicMode(true);
-        note.setIsFavourite(false);*/
+        note.setIsBasicMode(true);
 
         contentValues.put(COL_IS_BASIC_MODE, (note.getIsBasicMode()?1:0));
         contentValues.put(COL_TIMESTAMP_CREATED,  LocalDateTime.now().toString());
-//        contentValues.put(COL_IS_FAVOURITE, (note.getIsFavourite()?1:0));
-//        contentValues.put(COL_IS_SYNCHRONISED, (note.getIsSynchronised()?1:0));
+        contentValues.put(COL_IS_FAVOURITE, (note.getIsFavourite()?1:0));
+        contentValues.put(COL_IS_SYNCHRONISED, (note.getIsSynchronised()?1:0));
         contentValues.put(COL_BACKGROUND_COLOR, note.getBackgroundColorValue());
 
         database.insert(DATABASE_TABLE, null, contentValues);
@@ -183,7 +181,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Note note = new Note();
                 assignColumnsToNoteAttributes(cursor, note);
-
                 allNotes.add(note);
             } while(cursor.moveToNext());
         }

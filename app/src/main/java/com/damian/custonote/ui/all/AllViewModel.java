@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 public class AllViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
+    private MutableLiveData<Boolean> selection;
 
     public AllViewModel() {
         mText = new MutableLiveData<>();
@@ -17,23 +18,4 @@ public class AllViewModel extends ViewModel {
         return mText;
     }
 
-    public void selectNote() {
-
-    }
-
-    public void checkAllNotes() {
-
-    }
-
-    public void uncheckNote() {
-
-    }
-
-    public void uncheckAllNotes() {
-
-    }
-
-    public void markAsFavourite() {
-
-    }
 }
