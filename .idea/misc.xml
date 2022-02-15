@@ -81,26 +81,42 @@
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable-anydpi/ic_bold.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable-anydpi/ic_cursive.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable-anydpi/ic_letter_a.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable-small/google.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_add_favourite.xml" value="0.9708333333333333" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_add_label.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_add_label_1.xml" value="0.17685185185185184" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_add_note.xml" value="0.21574074074074073" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_align_center.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_align_justify.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_align_left.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_align_right.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_arrow_back.xml" value="0.14444444444444443" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_attachment.xml" value="0.225" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_baseline_label_important_24.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_baseline_person_add_alt_1_24.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_cursor.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_label.xml" value="0.17685185185185184" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_letter_a.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_list_bulleted.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_list_numbered.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_search.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_star.xml" value="0.21574074074074073" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_test.xml" value="0.20925925925925926" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_twotone_label_24.xml" value="0.2964102564102564" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/drawable/ic_twotone_padding_24.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.18435374149659864" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout-w936dp/activity_login.xml" value="0.105859375" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_login.xml" value="0.28489583333333335" />
-        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_main.xml" value="0.11851851851851852" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_note.xml" value="0.25" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/activity_searchable.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/content_note.xml" value="0.33" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/content_scrolling.xml" value="0.28489583333333335" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/fragment_all.xml" value="0.25" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/fragment_favourites.xml" value="0.1527777777777778" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/fragment_labels.xml" value="0.1" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/fragment_note.xml" value="0.27247191011235955" />
-        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_dialog_basic_info_about_user.xml" value="0.28489583333333335" />
+        <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_dialog_basic_info_about_user.xml" value="0.33" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_dialog_color_palette.xml" value="0.22" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_dialog_font_size.xml" value="0.25" />
         <entry key="..\:/Users/admin/Desktop/CustoNote/app/src/main/res/layout/layout_single_note_in_browsing.xml" value="0.33" />

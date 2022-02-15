@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/itemAddImage"
+        android:icon="@drawable/ic_add_photo"
+        android:iconTint="@color/white"
+        android:title="Add a photo"
+        android:tooltipText="add a photo"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/itemSwitchMode"
         android:icon="@drawable/ic_letter_a"
         android:iconTint="@color/white"
@@ -18,12 +25,13 @@
         android:title="Choose color of this note"
         android:tooltipText="Choose color of this note"
         app:showAsAction="always"/>
+
     <item
-        android:id="@+id/itemDelete_MoteActivity"
-        android:icon="@drawable/ic_delete"
+        android:id="@+id/itemStar"
+        android:icon="@drawable/ic_star"
         android:iconTint="@color/white"
-        android:title="Delete the note"
-        android:tooltipText="delete the note"
+        android:title="Mark the note as favourite"
+        android:tooltipText="mark as favourite"
         app:showAsAction="always" />
 
     <item
@@ -33,13 +41,12 @@
         android:title="Save the note"
         android:tooltipText="save the note"
         app:showAsAction="always" />
-
     <item
-        android:id="@+id/itemStar"
-        android:icon="@drawable/ic_star"
+        android:id="@+id/itemDelete_NoteActivity"
+        android:icon="@drawable/ic_delete"
         android:iconTint="@color/white"
-        android:title="Mark the note as favourite"
-        android:tooltipText="mark as favourite"
+        android:title="Delete the note"
+        android:tooltipText="delete the note"
         app:showAsAction="always" />
 
 </menu>

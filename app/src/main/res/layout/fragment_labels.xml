@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.labels.LabelsFragment">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:src="@drawable/ic_label" />
-
     <TextView
         android:id="@+id/text_labels"
         android:layout_width="match_parent"

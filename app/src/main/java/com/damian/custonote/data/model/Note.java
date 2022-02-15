@@ -9,22 +9,14 @@ import java.time.LocalDateTime;
 
 public class Note implements Serializable {
     int ID, Photo;
-    String title;
-    String content;
+    String title, content;
+    byte[] image;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
     Boolean isBasicMode, isSynchronised, isFavourite, isSelectedToRemove;
     int backgroundColorValue, backgroundTextColorValue, textColorValue;
 
-    public Note(int ID, String title, String content/*, LocalDateTime timestampNoteCreated*/, Boolean isBasicMode, Boolean isFavourite) {
-        this.ID = ID;
-        this.title = title;
-        this.content = content;
-        //        this.timestampNoteCreated = timestampNoteCreated;
-        this.isBasicMode = isBasicMode;
-        this.isFavourite = isFavourite;
-    }
-
-    public Note(String title, String content, Boolean isBasicMode, Boolean isFavourite, Boolean isSynchronised, LocalDateTime timestampNoteCreated, LocalDateTime timestampNoteModified, int backgroundColorValue) {
+    public Note(String title, String content, Boolean isBasicMode, Boolean isFavourite, Boolean isSynchronised,
+                LocalDateTime timestampNoteCreated, LocalDateTime timestampNoteModified, int backgroundColorValue, byte[] image) {
         this.title = title;
         this.content = content;
         this.isBasicMode = isBasicMode;
@@ -33,15 +25,24 @@ public class Note implements Serializable {
         this.isFavourite = isFavourite;
         this.isSynchronised = isSynchronised;
         this.backgroundColorValue = backgroundColorValue;
+        this.image = image;
     }
 
+    /*public Note(int ID, String title, String content*//*, LocalDateTime timestampNoteCreated*//*, Boolean isBasicMode, Boolean isFavourite) {
+        this.ID = ID;
+        this.title = title;
+        this.content = content;
+        //        this.timestampNoteCreated = timestampNoteCreated;
+        this.isBasicMode = isBasicMode;
+        this.isFavourite = isFavourite;
+    }
     public Note(String title, String content, Boolean isBasicMode, LocalDateTime timestampNoteCreated, LocalDateTime timestampNoteModified, int backgroundColorValue) {
         this.title = title;
         this.content = content;
         this.isBasicMode = isBasicMode;
         this.timestampNoteModified = timestampNoteModified;
         this.backgroundColorValue = backgroundColorValue;
-    }
+    }*/
 
     public Note(int ID) {
         this.ID = ID;
@@ -161,6 +162,14 @@ public class Note implements Serializable {
 
     public void setTextColorValue(int textColorValue) {
         this.textColorValue = textColorValue;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
 /*

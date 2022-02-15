@@ -37,21 +37,17 @@
                 android:layout_height="30dp"
                 android:layout_marginRight="@dimen/note_margin"
                 android:background="@drawable/ic_empty_star"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewTitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textViewTitle" />
 
             <ImageView
                 android:id="@+id/imageViewMainImageOfNote"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
                 android:layout_marginEnd="16dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textViewContent"
                 app:layout_constraintTop_toTopOf="@+id/textViewContent"
-                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@android:drawable/stat_sys_vp_phone_call" />
 
             <TextView

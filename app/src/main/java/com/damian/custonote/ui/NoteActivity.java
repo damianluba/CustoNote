@@ -3,14 +3,20 @@ package com.damian.custonote.ui;
 import static android.graphics.Typeface.BOLD;
 import static android.graphics.Typeface.ITALIC;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -30,9 +36,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.navigation.NavController;
@@ -43,8 +57,13 @@ import com.damian.custonote.R;
 import com.damian.custonote.data.database.DatabaseHelper;
 import com.damian.custonote.data.model.Note;
 import com.damian.custonote.databinding.ActivityNoteBinding;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -53,7 +72,7 @@ public class NoteActivity extends AppCompatActivity {
     private ActivityNoteBinding binding;
     private Note note;
     private TextView textViewTimestamp;
-    private MenuItem menuItemSave, menuItemStar, menuItemDelete, menuItemSwitchMode, menuItemBackgroundColor;
+    private MenuItem menuItemSave, menuItemStar, menuItemDelete, menuItemSwitchMode, menuItemBackgroundColor, menuItemAddImage;
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
     private EditText editTextTitle,  editTextContent;
@@ -63,6 +82,13 @@ public class NoteActivity extends AppCompatActivity {
     private Toolbar toolbarTextTools, toolbarTextAlignment, toolbarFontSize;
     private NestedScrollView noteBackground;
     private int valueOfSelectedColor;
+    private ImageView imageViewImageOfNote;
+    private Uri uriPickedImage = null;
+    private Bitmap bitmapImage;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    private final static int REQUEST_CODE_ACCESS_MEMORY_PERMITTED = 2;
+    AppBarLayout appBarLayout;
+    CoordinatorLayout.LayoutParams params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +98,9 @@ public class NoteActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); //shows the arrow allowing to go back by pressing its
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        appBarLayout = findViewById(R.id.appBarLayout);
+
+         params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
 
         context= this;
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_note);
@@ -90,6 +119,12 @@ public class NoteActivity extends AppCompatActivity {
         toolbarTextAlignment = findViewById(R.id.toolbarTextAlignment);
         toolbarFontSize = findViewById(R.id.toolbarFontSize);
         noteBackground = findViewById(R.id.nestedScrollView);
+        imageViewImageOfNote = findViewById(R.id.imageViewImageOfNote);
+        appBarLayout = findViewById(R.id.appBarLayout);
+        collapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayoutInNoteActivity);
+        CoordinatorLayout.LayoutParams params =(CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        appBarLayout.setLayoutParams(params);
+
 
         //------------------------------------------------RECEIVING DATA FROM PREVIOUS ACTIVITY and  NOTE CONFIGURATION  ----------------------------------------------------------
         intent = getIntent();
@@ -102,10 +137,11 @@ public class NoteActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_note_activity, menu);
         menuItemSave = menu.findItem(R.id.itemSave);
-        menuItemDelete = menu.findItem(R.id.itemDelete_MoteActivity);
+        menuItemDelete = menu.findItem(R.id.itemDelete_NoteActivity);
         menuItemStar = menu.findItem(R.id.itemStar);
         menuItemSwitchMode = menu.findItem(R.id.itemSwitchMode);
         menuItemBackgroundColor = menu.findItem(R.id.itemBackgroundColor);
+        menuItemAddImage = menu.findItem(R.id.itemAddImage);
 
         //started buttons configuration
         coloriseStar();
@@ -143,7 +179,7 @@ public class NoteActivity extends AppCompatActivity {
 
         menuItemSwitchMode.setOnMenuItemClickListener(menuItem -> {
             if(note.getIsBasicMode())
-                configureButtonsForAdvancedMode();
+                configureAdvancedElementsForAdvancedMode();
             else {  //switch to basic mode
                 AlertDialog alertDialogClearFormatting;
                 clearFormatting(note.getContent());
@@ -155,6 +191,11 @@ public class NoteActivity extends AppCompatActivity {
 
         menuItemBackgroundColor.setOnMenuItemClickListener(menuItem -> {
             configureAndShowDialogColorPaletteForBackground();
+            return false;
+        });
+
+        menuItemAddImage.setOnMenuItemClickListener(menuItem -> {
+            checkAndRequestForPermission();
             return false;
         });
 
@@ -176,7 +217,9 @@ public class NoteActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(context);
         database = databaseHelper.getWritableDatabase();
         String scriptedNoteContent = getScriptedContent(editTextContent.getText());
-        databaseHelper.updateNote(note.getId(), editTextTitle.getText().toString(), scriptedNoteContent, note.getIsFavourite(), note.getBackgroundColorValue());
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        databaseHelper.updateNote(note.getId(), editTextTitle.getText().toString(), scriptedNoteContent, note.getIsFavourite(), note.getBackgroundColorValue(), note.getImage());
 
         textViewTimestamp.setText(
                         "Modified: " + timestampNoteModified.format(DateTimeFormatter.ofPattern(databaseHelper.FORMAT_DATE_TIME)) +
@@ -189,6 +232,9 @@ public class NoteActivity extends AppCompatActivity {
         //here attributes isFavourite and isBasicMode aren't saved -  as only a user clicks marks a note as favourite, makes changes in note data
         note.setTitle(editTextTitle.getText().toString());
         setScriptedContent(editTextContent.getText());
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        note.setImage(stream.toByteArray()); //TODO
 
         databaseHelper = new DatabaseHelper(context);
         database = databaseHelper.getWritableDatabase();
@@ -203,7 +249,8 @@ public class NoteActivity extends AppCompatActivity {
 
     private void configureNewNote() {
         textViewTimestamp.setVisibility(View.GONE);
-        note = new Note(null, null, true, false, false, null, null, Color.WHITE);
+        appBarLayout.setExpanded(false);
+        note = new Note(null, null, true, false, false, null, null, Color.WHITE, null);
         showSystemKeyboard();
     }
 
@@ -212,8 +259,8 @@ public class NoteActivity extends AppCompatActivity {
         textViewTimestamp.setVisibility(View.VISIBLE);
 
         if(note.getIsBasicMode())
-            hideAdvancedButtonsForAdvancedMode();
-        else configureButtonsForAdvancedMode();
+            hideAdvancedElementsForAdvancedMode();
+        else configureAdvancedElementsForAdvancedMode();
 
         editTextTitle.setText(note.getTitle());
         editTextContent.setText(HtmlCompat.fromHtml(note.getContent() , HtmlCompat.FROM_HTML_MODE_LEGACY));
@@ -226,7 +273,7 @@ public class NoteActivity extends AppCompatActivity {
         else textViewTimestamp.setText("Created: " + note.getTimestampNoteCreated().format(DateTimeFormatter.ofPattern(DatabaseHelper.FORMAT_DATE_TIME)));
     }
 
-    public void configureButtonsForAdvancedMode() {
+    public void configureAdvancedElementsForAdvancedMode() {
         ImageView imageViewBold = findViewById(R.id.imageViewBold);
         StyleSpan selectedStyle;
         imageViewBold.setOnClickListener(v -> {
@@ -317,19 +364,21 @@ public class NoteActivity extends AppCompatActivity {
         else menuItemStar.setIconTintList(ColorStateList.valueOf(Color.WHITE)); //setting the color of the item
     }
 
-    private void setUpNoteMode() {
+    private void setUpNoteMode() { //it's setup so it's at the beginning
         if(note.getIsBasicMode()) {
             //TURN OFF ADVANCED MODE
             menuItemSwitchMode.setIconTintList(ColorStateList.valueOf(Color.WHITE)); //setting the color of the item
             toolbarTextAlignment.setVisibility(View.GONE);
+//            imageViewMainImageOfNote.setImageBitmap(null);
             toolbarTextTools.setVisibility(View.GONE);
+            menuItemAddImage.setVisible(false);
         } else {
             //TURN ON ADVANCED MODE
             menuItemSwitchMode.setIconTintList(ColorStateList.valueOf(Color.BLUE)); //setting the color of the item
-
             toolbarTextTools.setVisibility(View.VISIBLE);
             toolbarTextAlignment.setVisibility(View.VISIBLE);
-            configureButtonsForAdvancedMode();
+            menuItemAddImage.setVisible(true);
+            configureAdvancedElementsForAdvancedMode();
         }
     }
 
@@ -587,7 +636,17 @@ public class NoteActivity extends AppCompatActivity {
         } else toolbarTextAlignment.setVisibility(View.GONE);
     }
 
-    public void hideAdvancedButtonsForAdvancedMode() {
+    private void setCollapsingToolbarLayout() {
+        if(imageViewImageOfNote.getDrawable() != null) {
+            appBarLayout.setExpanded(true);
+            appBarLayout.setAlpha(0.6F);
+            params.height = 800;
+        } else {
+            appBarLayout.setExpanded(false);
+        }
+    }
+
+    public void hideAdvancedElementsForAdvancedMode() {
             toolbarTextTools.setVisibility(View.GONE);
             toolbarTextAlignment.setVisibility(View.GONE);
             toolbarFontSize.setVisibility(View.GONE);
@@ -596,5 +655,55 @@ public class NoteActivity extends AppCompatActivity {
     public static SpannableStringBuilder setSelectedTextSectionForSize(SpannableString selectedText, int fontSize) {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         return spannableStringBuilder;
+    }
+
+    private void checkAndRequestForPermission() {
+        if(ContextCompat.checkSelfPermission(NoteActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) { //if reading storage permission not granted
+            if(ActivityCompat.shouldShowRequestPermissionRationale(NoteActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Toast.makeText(NoteActivity.this, "Reading storage permission is required", Toast.LENGTH_SHORT).show();
+            } else {
+                ActivityCompat.requestPermissions(NoteActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_ACCESS_MEMORY_PERMITTED);
+            }
+        } else openGallery();
+    }
+
+    //choosing an image
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode() == Activity.RESULT_OK) {
+                uriPickedImage = result.getData().getData();
+                InputStream inputStream = null;
+                try {
+                    inputStream = getContentResolver().openInputStream(uriPickedImage);
+                } catch(FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                bitmapImage = BitmapFactory.decodeStream(inputStream);
+                imageViewImageOfNote.setImageBitmap(bitmapImage);
+//                imageViewImageOfNote.setImageURI(uriPickedImage);
+                Toast.makeText(NoteActivity.this, "Chosen image", Toast.LENGTH_SHORT).show();
+                setCollapsingToolbarLayout();
+            }
+        }
+    });
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            openGallery();
+        else Toast.makeText(NoteActivity.this, "Reading storage permission is required", Toast.LENGTH_SHORT).show();
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void openGallery() {
+        Intent intentGallery = new Intent(Intent.ACTION_GET_CONTENT);
+        intentGallery.setType("image/*"); //setting type of intent
+        resultLauncher.launch(intentGallery);
     }
 }

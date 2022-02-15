@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.damian.custonote.R;
 import com.damian.custonote.data.model.Note;
 
@@ -23,9 +24,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     List<Note> listNotes;
     private OnSelectedNoteListener onSelectedNoteListener;
     public boolean checkingNotesInProgress;
-
     public int selectedCount = 1;
-
 
     //    adapting the note to full view: https://larntech
     //    .net/recyclerview-onclicklistener-open-new-activity-filter-recyclerview-using-search-view/
@@ -85,25 +84,27 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
     @Override
     public void onBindViewHolder(@NonNull NotesPositionViewHolder holder, int position) { //lists all notes with all their parameters
         final Note note = listNotes.get(position);
-        holder.textViewTitle.setText(note.getTitle());
-        holder.textViewContent.setText(note.displayReadableContent(note.getContent()));
+        if(note.getTitle().isEmpty())
+            holder.textViewTitle.setVisibility(View.GONE);
+        else holder.textViewTitle.setText(note.getTitle());
+        if(note.getContent().isEmpty())
+            holder.textViewContent.setVisibility(View.GONE);
+        else holder.textViewContent.setText(note.displayReadableContent(note.getContent()));
         holder.noteBackground.setBackgroundColor(note.getBackgroundColorValue());
-
-
-        holder.imageViewIsFavourite.setImageResource(note.getIsFavourite() == true ? R.drawable.ic_star :
-                R.drawable.ic_empty_star);
-
+        holder.imageViewIsFavourite.setImageResource(note.getIsFavourite() == true ? R.drawable.ic_star : R.drawable.ic_empty_star);
         holder.imageViewIsFavourite.setOnClickListener(v -> {
         });
+
+//        if(holder.imageViewMainImageOfNote !=null)
+            Glide.with(context).load(note.getImage()).into(holder.imageViewMainImageOfNote);
+//        holder.imageViewMainImageOfNote.setVisibility(View.GONE);
 
         if(checkingNotesInProgress) {
             holder.checkBoxNoteChecked.setVisibility(View.VISIBLE);
             holder.checkBoxNoteChecked.setOnCheckedChangeListener((buttonView, isChecked) -> System.out.println(
             "Checkbox clicked"));
             checkingNotesInProgress = false;
-
-        }
-        else {
+        } else {
             holder.checkBoxNoteChecked.setVisibility(View.GONE);
             checkingNotesInProgress = true;
         }
@@ -119,8 +120,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         return listNotes.size();
     }
 
-    public class NotesPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-            View.OnLongClickListener {
+    public class NotesPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView textViewTitle, textViewContent;
         ImageView imageViewMainImageOfNote, imageViewIsFavourite;
         NotesAdapter notesAdapter;
@@ -134,7 +134,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
             imageViewIsFavourite = itemView.findViewById(R.id.imageViewIsFavourite);
             noteBackground = itemView.findViewById(R.id.noteBackground);
             checkBoxNoteChecked = itemView.findViewById(R.id.checkBoxNoteChecked);
-            //            imageViewMainImageOfNote = itemView.findViewById(R.id.imageViewMainImageOfNote);
+            imageViewMainImageOfNote = itemView.findViewById(R.id.imageViewMainImageOfNote);
             this.notesAdapter = notesAdapter;
 
             if(checkingNotesInProgress) {
@@ -144,7 +144,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
             } else {
                 checkBoxNoteChecked.setVisibility(View.GONE);
             }
-
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);

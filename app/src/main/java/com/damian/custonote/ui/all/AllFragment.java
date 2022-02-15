@@ -30,19 +30,58 @@ import java.util.List;
 
 public class AllFragment extends Fragment {
     private RecyclerView recyclerViewAllNotes;
-    private FloatingActionButton fabAddNote;
     private List<Note> listNotes;
     private AllViewModel allViewModel;
     private FragmentAllBinding binding;
     private Boolean notesCheckingInProgress;
     private CheckBox checkBoxRemoveNote;
-//    private ActionMode actionMode;
+    //    private ActionMode actionMode;
+    private final static String TAG = "AllFragment";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         allViewModel = new ViewModelProvider(this).get(AllViewModel.class);
         binding = FragmentAllBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        //save data for realtime database
+        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = database.getReference("message");
+        databaseReference.setValue("Hello, World!");
+
+        //setup for cloud storage
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference();
+        StorageReference referenceImage = storageReference.child("photo.jpg");
+        StorageReference referenceFolderOfImages = storageReference.child("images/photo.jpg");
+        referenceImage.getName().equals(referenceFolderOfImages.getName());
+        //now I call putBytes(), putFile(), putStream()
+
+        //read data for realtime database
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });*/
+
+        FloatingActionButton fabAddNote = getActivity().findViewById(R.id.fabAdd);
+
+        try {
+            fabAddNote.setImageResource(R.drawable.ic_add_note);
+            fabAddNote.setOnClickListener(view -> startActivity(new Intent(getContext(), NoteActivity.class)));
+
+        } catch(Exception exception) {
+            exception.printStackTrace();
+        }
         recyclerViewAllNotes = root.findViewById(R.id.recyclerViewAllNotes); //R chosen from com.damian.custonote.R
         recyclerViewAllNotes.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewAllNotes.setHasFixedSize(true); //?

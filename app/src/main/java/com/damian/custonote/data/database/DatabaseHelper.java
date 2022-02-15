@@ -30,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_IS_SYNCHRONISED = "IS_SYNCHRONISED";
     public static final String FORMAT_DATE_TIME = "d MMM YYYY, H:mm";
     public static final String COL_BACKGROUND_COLOR = "BACKGROUND_COLOR";
+    public static final String COL_IMAGE = "IMAGE";
 
     //methods for notes managing
     public DatabaseHelper(@Nullable Context context) {
@@ -47,7 +48,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_TIMESTAMP_MODIFIED + " TEXT," +
                 COL_IS_FAVOURITE + " TEXT," +
                 COL_IS_SYNCHRONISED + " TEXT," +
-                COL_BACKGROUND_COLOR + " TEXT)");
+                COL_BACKGROUND_COLOR + " TEXT," +
+                COL_IMAGE + " BLOB)");
     }
 
     @Override
@@ -70,12 +72,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_IS_FAVOURITE, (note.getIsFavourite()?1:0));
         contentValues.put(COL_IS_SYNCHRONISED, (note.getIsSynchronised()?1:0));
         contentValues.put(COL_BACKGROUND_COLOR, note.getBackgroundColorValue());
-
+        contentValues.put(COL_IMAGE, note.getImage());
         database.insert(DATABASE_TABLE, null, contentValues);
         database.close();
     }
 
-    public void updateNote(int ID, String newTitle, String newContent, Boolean newIsBasicMode, int newBackgroundColor) {
+    public void updateNote(int ID, String newTitle, String newContent, Boolean newIsBasicMode, int newBackgroundColor, byte[] newImage) {
         SQLiteDatabase database = this.getWritableDatabase();
        ContentValues updatedValues = new ContentValues();
         updatedValues.put(COL_TITLE, newTitle);
@@ -84,7 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //COL_IS_FAVOURITE isn't updated here because it's updated in markOrUnmarkNoteAsFavourite()
         updatedValues.put(COL_IS_BASIC_MODE,  newIsBasicMode);
         updatedValues.put(COL_BACKGROUND_COLOR, newBackgroundColor);
-
+        updatedValues.put(COL_IMAGE, newImage);
         database.update(DATABASE_TABLE, updatedValues,  COL_ID + " = " + ID, null);
         database.close();
     }
@@ -170,6 +172,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         note.setIsFavourite(cursor.getInt(6) == 1);
         note.setIsSynchronised(cursor.getInt(7) == 1);
         note.setBackgroundColorValue(cursor.getInt(8));
+        note.setImage(cursor.getBlob(9));
     }
 
     public List<Note> getNotes() {
