@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Note implements Serializable {
-    int ID, Photo;
+    int ID;
     String title, content;
     byte[] image;
     LocalDateTime timestampNoteCreated, timestampNoteModified;
@@ -55,13 +55,6 @@ public class Note implements Serializable {
 
     public Note() {
 
-    }
-
-    @Override
-    public String toString() {
-        return "Note{" + "ID=" + ID + ", Photo=" + Photo + ", title='" + title + '\'' + ", content='" + content +
-                //                '\'' + ", timestampNoteCreated=" + timestampNoteCreated +
-                '}';
     }
 
     public int getId() {
@@ -114,14 +107,6 @@ public class Note implements Serializable {
 
     public void setTimestampNoteModified(LocalDateTime timestampNoteModified) {
         this.timestampNoteModified = timestampNoteModified;
-    }
-
-    public int getPhoto() {
-        return Photo;
-    }
-
-    public void setPhoto(int photo) {
-        Photo = photo;
     }
 
     public Boolean getIsFavourite() {

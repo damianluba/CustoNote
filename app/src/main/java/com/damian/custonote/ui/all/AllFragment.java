@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -13,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +27,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-
 public class AllFragment extends Fragment {
     private RecyclerView recyclerViewAllNotes;
     private List<Note> listNotes;
@@ -36,7 +35,8 @@ public class AllFragment extends Fragment {
     private Boolean notesCheckingInProgress;
     private CheckBox checkBoxRemoveNote;
     //    private ActionMode actionMode;
-    private final static String TAG = "AllFragment";
+    private static final int RECYCLER_VIEW_CODE = 1;
+    MenuItem menuItemSynchroniseNotes;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,50 +44,13 @@ public class AllFragment extends Fragment {
         binding = FragmentAllBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        //save data for realtime database
-        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = database.getReference("message");
-        databaseReference.setValue("Hello, World!");
-
-        //setup for cloud storage
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = firebaseStorage.getReference();
-        StorageReference referenceImage = storageReference.child("photo.jpg");
-        StorageReference referenceFolderOfImages = storageReference.child("images/photo.jpg");
-        referenceImage.getName().equals(referenceFolderOfImages.getName());
-        //now I call putBytes(), putFile(), putStream()
-
-        //read data for realtime database
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });*/
-
-        FloatingActionButton fabAddNote = getActivity().findViewById(R.id.fabAdd);
-
-        try {
-            fabAddNote.setImageResource(R.drawable.ic_add_note);
-            fabAddNote.setOnClickListener(view -> startActivity(new Intent(getContext(), NoteActivity.class)));
-
-        } catch(Exception exception) {
-            exception.printStackTrace();
-        }
         recyclerViewAllNotes = root.findViewById(R.id.recyclerViewAllNotes); //R chosen from com.damian.custonote.R
         recyclerViewAllNotes.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewAllNotes.setHasFixedSize(true); //?
-        recyclerViewAllNotes.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-
+//        recyclerViewAllNotes.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL)); //it serves the ability to set space between items in recyclerview
         showNotesInUi();
+
+
         return root;
     }
 
@@ -97,15 +60,13 @@ public class AllFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-/*    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }*/
-
     @Override
     public void onResume() {
-        showNotesInUi();
         super.onResume();
+        showNotesInUi();
+        FloatingActionButton fabAddNote = getActivity().findViewById(R.id.fabAdd);
+        fabAddNote.setImageResource(R.drawable.ic_add_note);
+        fabAddNote.setOnClickListener(v -> startActivity(new Intent(getContext(), NoteActivity.class)));
     }
 
     @Override
@@ -150,6 +111,8 @@ public class AllFragment extends Fragment {
         recyclerViewAllNotes.setAdapter(notesAdapter);
     }
 
+
+    //METHODS FOR SPECIAL MODE OF NOTES DELETING
     /*private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         // override methods for implementing methods in case of will of toolbar change
         @Override

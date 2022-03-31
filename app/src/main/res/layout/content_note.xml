@@ -39,6 +39,7 @@
                 android:textAllCaps="false"
                 android:textSize="40sp"
                 android:textStyle="bold"
+                android:textColorHighlight="@color/dark_green"
                 tools:text="@string/sampleTextInNoteTitle" />
 
             <EditText
@@ -48,6 +49,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:hint="Here write your ideas and notes"
                 android:textAllCaps="false"
+                android:textColorHighlight="@color/dark_green"
                 android:textSize="20sp"
                 tools:text="@string/sampleTextInNoteContent"/>
 

@@ -95,9 +95,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesPositio
         holder.imageViewIsFavourite.setOnClickListener(v -> {
         });
 
-//        if(holder.imageViewMainImageOfNote !=null)
+        if(note.getImage() != null)
             Glide.with(context).load(note.getImage()).into(holder.imageViewMainImageOfNote);
-//        holder.imageViewMainImageOfNote.setVisibility(View.GONE);
+        else holder.imageViewMainImageOfNote.setVisibility(View.GONE);
 
         if(checkingNotesInProgress) {
             holder.checkBoxNoteChecked.setVisibility(View.VISIBLE);

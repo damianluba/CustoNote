@@ -1,7 +1,6 @@
 package com.damian.custonote.ui.login;
 
 import android.util.Patterns;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,6 +10,7 @@ import com.damian.custonote.data.LoginRepository;
 import com.damian.custonote.data.Result;
 import com.damian.custonote.data.model.LoggedInUser;
 
+// not used as for now
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();

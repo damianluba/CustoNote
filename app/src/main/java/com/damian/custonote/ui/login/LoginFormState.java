@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 /**
  * Data validation state of the login form.
  */
+// not used as for now
 class LoginFormState {
     @Nullable
     private Integer usernameError;

@@ -11,6 +11,7 @@ import com.damian.custonote.data.LoginRepository;
  * ViewModel provider factory to instantiate LoginViewModel.
  * Required given LoginViewModel has a non-empty constructor
  */
+// not used as for now
 public class LoginViewModelFactory implements ViewModelProvider.Factory {
 
     @NonNull

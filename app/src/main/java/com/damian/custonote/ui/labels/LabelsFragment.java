@@ -28,7 +28,6 @@ public class LabelsFragment extends Fragment {
         labelsViewModel = new ViewModelProvider(this).get(LabelsViewModel.class);
         binding = FragmentLabelsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        FloatingActionButton fabAddLabel = getActivity().findViewById(R.id.fabAdd);
         final TextView textView = binding.textLabels;
 
         labelsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -37,20 +36,22 @@ public class LabelsFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
         /*((MainActivity)getActivity()).setFragmentRefreshListener(new MainActivity.FragmentRefreshListener() {
             @Override
             public void onRefresh() {
 
             }
         });*/
-
-
-        fabAddLabel.setImageResource(R.drawable.ic_add_label);
-        fabAddLabel.setOnClickListener(view -> {
-            Toast.makeText(getContext(), "Labels", Toast.LENGTH_LONG).show();
-        });
-
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FloatingActionButton fabAddLabel = getActivity().findViewById(R.id.fabAdd);
+        fabAddLabel.setImageResource(R.drawable.ic_add_label);
+        fabAddLabel.setOnClickListener(v -> Toast.makeText(getActivity(), "Labels", Toast.LENGTH_SHORT).show());
     }
 
     public void displayImage(Context context, Object path, ImageView imageView) {

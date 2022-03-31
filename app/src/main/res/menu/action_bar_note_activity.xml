@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/itemSynchronisation"
+        android:icon="@drawable/ic_not_synchronised"
+        android:iconTint="@color/black"
+        android:title="synchronise the note with Google account"
+        android:tooltipText="synchronise the note with Google account"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/itemAddImage"
         android:icon="@drawable/ic_add_photo"
         android:iconTint="@color/white"
